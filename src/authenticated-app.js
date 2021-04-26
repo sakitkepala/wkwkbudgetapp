@@ -1,19 +1,20 @@
 import { Router } from "@reach/router";
+import { BudgetScreen } from "./screens/budget";
 
-function Dash() {
+// TODO:
+function DashboardScreen() {
   return "Dashboard";
-}
-
-function Budget() {
-  return "Manajemen Budget";
 }
 
 function AuthenticatedApp() {
   return (
+    // TODO: navigasi
+    // <nav>...</nav>
+
     <div className="WkwkApp">
       <Router>
-        <Dash path="/u/dashboard" />
-        <Budget path="/u/budget" />
+        <DashboardScreen path="/u/dashboard" />
+        <BudgetScreen path="/u/budget" />
       </Router>
     </div>
   );
