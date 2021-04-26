@@ -10,15 +10,13 @@ function DashboardScreen() {
 
 function AuthenticatedApp() {
   return (
-    <Box className="screen" bgColor="gray.100" minH="100vh">
+    <Box className="WkwkApp" bgColor="gray.100" minH="100vh">
       <NavBar />
 
-      <div className="WkwkApp">
-        <Router>
-          <DashboardScreen path="/u/dashboard" />
-          <BudgetScreen path="/u/budget" />
-        </Router>
-      </div>
+      <Router>
+        <DashboardScreen path="/u/dashboard" />
+        <BudgetScreen path="/u/budget" />
+      </Router>
 
       <Center as="footer" className="footer" p="40px" color="gray.500">
         &copy;&nbsp;
