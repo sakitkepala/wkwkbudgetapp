@@ -12,8 +12,8 @@ const linkNavigasi = [
     teks: "Bajet",
   },
   {
-    href: "/u/dlsb",
-    teks: "Dan lain sebagainya...",
+    href: "/u/dana",
+    teks: "Akun Dana",
   },
 ];
 
