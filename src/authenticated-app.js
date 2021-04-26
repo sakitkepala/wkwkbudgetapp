@@ -1,5 +1,5 @@
 import { Router } from "@reach/router";
-import { Center } from "@chakra-ui/layout";
+import { Box, Center } from "@chakra-ui/layout";
 import { BudgetScreen } from "./screens/budget";
 import { NavBar } from "./components/nav";
 
@@ -10,7 +10,7 @@ function DashboardScreen() {
 
 function AuthenticatedApp() {
   return (
-    <>
+    <Box className="screen" bgColor="gray.100" minH="100vh">
       <NavBar />
 
       <div className="WkwkApp">
@@ -24,7 +24,7 @@ function AuthenticatedApp() {
         &copy;&nbsp;
         <a href="https://dev.sakitkepala.dev">sakitkepala.dev</a>, 2021
       </Center>
-    </>
+    </Box>
   );
 }
 
