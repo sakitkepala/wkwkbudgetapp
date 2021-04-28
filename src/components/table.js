@@ -19,6 +19,7 @@ import {
   Input,
   PopoverFooter,
   PopoverCloseButton,
+  useDisclosure,
 } from "@chakra-ui/react";
 import {
   ChevronDownIcon,
@@ -141,7 +142,7 @@ function KomponenTable({ data = [] }) {
                 <Td {...td.getCellProps()} isNumeric={td.column.isNumeric}>
                   {td.render("Cell")}{" "}
                   {td.column.id !== "dianggarkan" ? null : (
-                    <EditorBugdetInline />
+                    <EditorBugdetInline jumlahAwal={td.value} />
                   )}
                 </Td>
               ))}
@@ -153,11 +154,29 @@ function KomponenTable({ data = [] }) {
   );
 }
 
-function EditorBugdetInline() {
+function EditorBugdetInline({ jumlahAwal }) {
+  const { onOpen, onClose, isOpen } = useDisclosure();
+  const [inputBudget, setInputBudget] = React.useState(jumlahAwal);
+
   const initialFocusRef = React.useRef();
 
+  const onSubmitBudget = (ev) => {
+    // TODO: submit input
+    // ...
+
+    // reset form
+    setInputBudget(jumlahAwal);
+    onClose();
+  };
+
   return (
-    <Popover placement="top" initialFocusRef={initialFocusRef}>
+    <Popover
+      placement="top"
+      initialFocusRef={initialFocusRef}
+      isOpen={isOpen}
+      onOpen={onOpen}
+      onClose={onClose}
+    >
       <PopoverTrigger>
         <Button size="sm">
           <EditIcon />
@@ -172,11 +191,15 @@ function EditorBugdetInline() {
               ref={initialFocusRef}
               placeholder="misalnya... 1 000 000,00"
               bgColor="gray.100"
+              value={inputBudget}
+              onChange={(ev) => {
+                setInputBudget(ev.target.value);
+              }}
             />
           </PopoverBody>
 
           <PopoverFooter>
-            <Button size="sm" colorScheme="green">
+            <Button size="sm" colorScheme="green" onClick={onSubmitBudget}>
               Simpan
             </Button>
           </PopoverFooter>
