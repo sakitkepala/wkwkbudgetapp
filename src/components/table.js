@@ -1,7 +1,31 @@
 import * as React from "react";
 import { useTable, useGroupBy, useExpanded, useRowSelect } from "react-table";
-import { Table, Thead, Tbody, Tr, Th, Td, chakra, Box } from "@chakra-ui/react";
-import { ChevronDownIcon, ChevronRightIcon, SunIcon } from "@chakra-ui/icons";
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  chakra,
+  Box,
+  Popover,
+  PopoverTrigger,
+  Button,
+  PopoverContent,
+  PopoverArrow,
+  PopoverBody,
+  Portal,
+  Input,
+  PopoverFooter,
+  PopoverCloseButton,
+} from "@chakra-ui/react";
+import {
+  ChevronDownIcon,
+  ChevronRightIcon,
+  EditIcon,
+  SunIcon,
+} from "@chakra-ui/icons";
 
 const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
@@ -115,7 +139,10 @@ function KomponenTable({ data = [] }) {
             <Tr {...tr.getRowProps()}>
               {tr.cells.map((td) => (
                 <Td {...td.getCellProps()} isNumeric={td.column.isNumeric}>
-                  {td.render("Cell")}
+                  {td.render("Cell")}{" "}
+                  {td.column.id !== "dianggarkan" ? null : (
+                    <EditorBugdetInline />
+                  )}
                 </Td>
               ))}
             </Tr>
@@ -123,6 +150,40 @@ function KomponenTable({ data = [] }) {
         })}
       </Tbody>
     </Table>
+  );
+}
+
+function EditorBugdetInline() {
+  const initialFocusRef = React.useRef();
+
+  return (
+    <Popover placement="top" initialFocusRef={initialFocusRef}>
+      <PopoverTrigger>
+        <Button size="sm">
+          <EditIcon />
+        </Button>
+      </PopoverTrigger>
+
+      <Portal>
+        <PopoverContent p="2" pt="6" bgColor="gray.200">
+          <PopoverArrow bgColor="gray.200" />
+          <PopoverBody>
+            <Input
+              ref={initialFocusRef}
+              placeholder="misalnya... 1 000 000,00"
+              bgColor="gray.100"
+            />
+          </PopoverBody>
+
+          <PopoverFooter>
+            <Button size="sm" colorScheme="green">
+              Simpan
+            </Button>
+          </PopoverFooter>
+          <PopoverCloseButton />
+        </PopoverContent>
+      </Portal>
+    </Popover>
   );
 }
 
