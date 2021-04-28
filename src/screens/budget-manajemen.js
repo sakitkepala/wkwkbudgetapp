@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Box, Center, chakra } from "@chakra-ui/react";
-import { client as apiClient } from "../utils";
+import { useBudgetBulanIni } from "../utils/budget";
 import { BudgetLinesDataView } from "../components/budget-line";
 
 function DisplayBulan(props) {
@@ -43,24 +43,10 @@ function DisplayBajet(props) {
 }
 
 function ManajemenBudgetScreen() {
-  const [budgetBulanIni, setBudgetBulanIni] = React.useState(null);
+  const { data: budgetBulanIni } = useBudgetBulanIni();
 
   // dummy
   const dataTerpakai = 0;
-
-  React.useEffect(() => {
-    if (Boolean(budgetBulanIni)) {
-      return;
-    }
-    try {
-      const resBudget = apiClient("/budget");
-      resBudget.then((res) => {
-        setBudgetBulanIni(res.data);
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  }, [budgetBulanIni]);
 
   return (
     <Box>
