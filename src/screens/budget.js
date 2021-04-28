@@ -1,6 +1,6 @@
 import React from "react";
 import { InitialBudget as InitBudgetScreen } from "./budget-welcome";
-import { ManajemenBudget as ManajemenBudgetScreen } from "./budget-manajemen";
+import { ManajemenBudgetScreen } from "./budget-manajemen";
 import { client as apiClient } from "../utils";
 
 function useBudgetSetup() {
