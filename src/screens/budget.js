@@ -43,6 +43,8 @@ function BudgetScreen() {
   // TODO: implemen dispatch & value pakai context => <BudgetSetupProvider /> ?
   const { isBudgetSiap, dispatch } = useBudgetSetup();
 
+  // TODO: budget setup & pengecekan budget siap ini baiknya di provider authenticated app
+  // biar gak ada flash form waktu lagi loading data
   if (!isBudgetSiap) {
     return <InitBudgetScreen onSimpanAkun={(data) => dispatch(data)} />;
   }
