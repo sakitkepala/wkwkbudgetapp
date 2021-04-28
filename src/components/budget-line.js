@@ -1,5 +1,9 @@
 import React from "react";
-import { Box, Heading, Table, Tbody, Td, Text, Tr } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  // Heading, Table, Tbody, Td, Tr
+} from "@chakra-ui/react";
 import { client } from "../utils";
 import { TabelBudget } from "../components/table";
 
@@ -30,7 +34,9 @@ function BudgetLinesDataView({ bulan }) {
         py="12px"
         color="gray.500"
       >
-        <Heading as="h2" size="md">
+        <Text>To be developed...</Text>
+
+        {/* <Heading as="h2" size="md">
           {!budgetLines ? "" : budgetLines[0].kategori}
         </Heading>
         <Text mt="1em">{!budgetLines ? "" : budgetLines[0].kategori}</Text>
@@ -56,7 +62,7 @@ function BudgetLinesDataView({ bulan }) {
               </Td>
             </Tr>
           </Tbody>
-        </Table>
+        </Table> */}
       </Box>
 
       {!budgetLines ? "Loading..." : <TabelBudget data={budgetLines} />}
