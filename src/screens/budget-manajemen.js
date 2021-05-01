@@ -78,6 +78,10 @@ function namaBulan(bulan) {
   }
 }
 
+function getBulan(dummyBulan) {
+  return dummyBulan || new Date().getMonth();
+}
+
 /**
  * Screen manajemen budget menampilkan informasi untuk budgeting tiap bulannya,
  * sehingga data yang tampil adalah data budgeting untuk bulan ini.
@@ -88,16 +92,18 @@ function namaBulan(bulan) {
  * 3. apa saja yang dibudget untuk bulan ini?
  * ...
  */
-const hariIni = new Date();
-const tahun = 2021 || hariIni.getFullYear();
-const bulan = 11 || hariIni.getMonth();
 
 function ManajemenBudgetScreen() {
-  // Tiap perubahan tanggal akan dicek bulannya:
-  // ...apakah sudah ada budgeting untuk bulan ini.
-
+  // Tiap render bisa secara otomatis dapat data Date bulan dan tahun sekarang
+  // dengan menginstansiasi objek Date. Kemudian, karena requirement saat ini
+  // belum perlu mengelola bulan & tahun saat ini sebagai state karena tidak ada
+  // kondisi untuk mengubah state tersebut di renderan saat ini, jadi hook di
+  // bawah bisa dengan aman mengasumsikan date saat ini langsung dari inisiasi
+  // objek `Date()` saja.
   const danaLines = useDanaBulanIni();
   const budgetLines = useBudgetLines();
+
+  const bulan = getBulan(11);
 
   return (
     <Box>
@@ -105,8 +111,7 @@ function ManajemenBudgetScreen() {
         <DisplayBulan mt="12">{namaBulan(bulan)}</DisplayBulan>
         <DisplayDanaBudget danaLines={danaLines} budgetLines={budgetLines} />
       </Center>
-
-      <BudgetLinesDataView budgetLines={budgetLines} bulan="Desember" />
+      <BudgetLinesDataView budgetLines={budgetLines} />
     </Box>
   );
 }
