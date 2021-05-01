@@ -1,3 +1,4 @@
+import { Link as RouterLink } from "react-router-dom";
 import { Box, Center, Flex, Link as ChakraLink } from "@chakra-ui/layout";
 import {
   SettingsIcon,
@@ -22,7 +23,7 @@ function Link({ href, children, ...props }) {
     return <ChakraLink {...props}>{children}</ChakraLink>;
   }
   return (
-    <ChakraLink href={href} {...props}>
+    <ChakraLink as={RouterLink} to={href} {...props}>
       {children}
     </ChakraLink>
   );

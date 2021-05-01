@@ -1,4 +1,5 @@
-import { Router } from "@reach/router";
+import { Switch, Route } from "react-router-dom";
+
 import { Box, Center } from "@chakra-ui/layout";
 import { NavBar } from "./components/nav";
 import { BudgetScreen } from "./screens/budget";
@@ -14,11 +15,19 @@ function AuthenticatedApp() {
     <Box className="WkwkApp" bgColor="gray.100" minH="100vh">
       <NavBar />
 
-      <Router>
-        <DashboardScreen path="/u/dashboard" />
-        <BudgetScreen path="/u/budget" />
-        <AkunDanaScreen path="/u/dana" />
-      </Router>
+      <Switch>
+        <Route path="/u/dashboard">
+          <DashboardScreen />
+        </Route>
+
+        <Route path="/u/budget">
+          <BudgetScreen />
+        </Route>
+
+        <Route path="/u/dana">
+          <AkunDanaScreen />
+        </Route>
+      </Switch>
 
       <Center as="footer" className="footer" p="40px" color="gray.500">
         &copy;&nbsp;
