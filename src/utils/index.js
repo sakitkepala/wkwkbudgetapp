@@ -1,9 +1,15 @@
-function client(apiEndpoint, customConfig = {}) {
-  // TODO: config fetch
-  // ...
+function client(apiEndpoint, { data, ...customOptions } = {}) {
+  const defaultOptions = {
+    method: "GET",
+  };
+  const options = {
+    ...defaultOptions,
+    body: data ? JSON.stringify(data) : undefined,
+    ...customOptions,
+  };
 
-  // `fetch` returns Promise
-  return fetch(apiEndpoint, {}).then(async (respon) => {
+  // `fetch` nge-return Promise
+  return fetch(apiEndpoint, options).then(async (respon) => {
     const data = await respon.json();
     if (respon.ok) {
       return data;

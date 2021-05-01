@@ -6,8 +6,24 @@ async function readAll() {
   return listBudgetLine;
 }
 
+async function read(id) {
+  return listBudgetLine.find((line) => line.id === id);
+}
+
 async function searchByField(field, value) {
   return listBudgetLine.filter((line) => line[field] === value);
 }
 
-export { readAll, searchByField };
+async function update(valueObj) {
+  // reassign data source-nya setiap kali ada update/delete
+  // supaya data yang depend ke sini ikut update waktu di-fetch/query
+  listBudgetLine = listBudgetLine.map((line) => {
+    if (line.id === valueObj.id) {
+      return { ...line, ...valueObj };
+    }
+    return line;
+  });
+  return read(valueObj.id);
+}
+
+export { readAll, searchByField, update };

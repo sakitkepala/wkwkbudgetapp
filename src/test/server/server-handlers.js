@@ -2,6 +2,7 @@ import { rest } from "msw";
 import * as akunDB from "../data/akun";
 import * as budgetDB from "../data/budget";
 import * as budgetLineDB from "../data/budgetLine";
+import * as danaLineDB from "../data/danaLine";
 
 const handlers = [
   rest.get("/akun", async (req, res, context) => {
@@ -15,19 +16,43 @@ const handlers = [
     return res(context.json({ data: akun }));
   }),
 
-  rest.get("/budget", async (req, res, context) => {
-    // get latest budget
-    const data = await budgetDB.read();
+  rest.get("/dana-line", async (req, res, context) => {
+    const field = "budgetId";
+    const paramBudgetId = Number(req.url.searchParams.get(field));
+    const data = await danaLineDB.readByField(field, paramBudgetId);
     return res(context.json({ data }));
   }),
 
-  rest.get("/budgetLine/:bulan", async (req, res, context) => {
-    // get lines menurut parameter bulan
-    const data = await budgetLineDB.searchByField("bulan", req.params.bulan);
-    if (!data || data === []) {
-      return res(context.status(401));
-    }
+  rest.get("/budget/bulan-ini", async (req, res, context) => {
+    // get latest budget
+    const data = await budgetDB.readLatest();
     return res(context.json({ data }));
+
+    // TODO: read semua resource collection
+    // ...
+  }),
+
+  rest.get("/budgetLine", async (req, res, context) => {
+    // get lines menurut parameter bulan
+    const queryBulan = req.url.searchParams.get("bulan");
+    if (queryBulan) {
+      const data = await budgetLineDB.searchByField("bulan", queryBulan);
+      if (!data || data === []) {
+        return res(context.status(401));
+      }
+      return res(context.json({ data }));
+    }
+
+    // TODO: default ke resource collections
+    // ...
+  }),
+
+  rest.put("/budgetLine/:id", async (req, res, context) => {
+    const hasilUpdate = await budgetLineDB.update({
+      id: req.params.id,
+      ...JSON.parse(req.body),
+    });
+    return res(context.json({ data: hasilUpdate }));
   }),
 ];
 

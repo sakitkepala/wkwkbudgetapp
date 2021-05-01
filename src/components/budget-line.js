@@ -3,7 +3,7 @@ import { Box, Text } from "@chakra-ui/react";
 import { useBudgetLines } from "../utils/budget-lines";
 import { TabelBudget } from "../components/table";
 
-function BudgetLinesDataView({ bulan }) {
+function BudgetLinesDataView() {
   const { isLoading, isError, error, budgetLines } = useBudgetLines();
 
   return (

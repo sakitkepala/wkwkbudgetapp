@@ -27,6 +27,7 @@ import {
   EditIcon,
   SunIcon,
 } from "@chakra-ui/icons";
+import { useUpdateBudgetLine } from "../utils/budget-lines";
 
 const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
@@ -86,7 +87,7 @@ function KomponenTable({ data = [] }) {
     []
   );
 
-  const datanyaTabel = React.useMemo(() => data, []);
+  const datanyaTabel = data;
 
   const {
     getTableProps,
@@ -142,7 +143,7 @@ function KomponenTable({ data = [] }) {
                 <Td {...td.getCellProps()} isNumeric={td.column.isNumeric}>
                   {td.render("Cell")}{" "}
                   {td.column.id !== "dianggarkan" ? null : (
-                    <EditorBugdetInline jumlahAwal={td.value} />
+                    <EditorBudgetInline line={td.row.original} />
                   )}
                 </Td>
               ))}
@@ -154,18 +155,25 @@ function KomponenTable({ data = [] }) {
   );
 }
 
-function EditorBugdetInline({ jumlahAwal }) {
+function EditorBudgetInline({ line }) {
   const { onOpen, onClose, isOpen } = useDisclosure();
-  const [inputBudget, setInputBudget] = React.useState(jumlahAwal);
+
+  const [inputBudget, setInputBudget] = React.useState(line.dianggarkan);
+  const { mutate } = useUpdateBudgetLine();
 
   const initialFocusRef = React.useRef();
 
-  const onSubmitBudget = (ev) => {
-    // TODO: submit input
-    // ...
+  React.useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+    setInputBudget(line.dianggarkan);
+  }, [isOpen, line.dianggarkan]);
 
-    // reset form
-    setInputBudget(jumlahAwal);
+  const onSubmitBudget = (ev) => {
+    if (inputBudget !== line.dianggarkan) {
+      mutate({ id: line.id, dianggarkan: inputBudget });
+    }
     onClose();
   };
 
@@ -193,7 +201,8 @@ function EditorBugdetInline({ jumlahAwal }) {
               bgColor="gray.100"
               value={inputBudget}
               onChange={(ev) => {
-                setInputBudget(ev.target.value);
+                const formattedInput = Number(ev.target.value);
+                setInputBudget(formattedInput);
               }}
             />
           </PopoverBody>
@@ -225,42 +234,5 @@ function TabelBudget({ data }) {
     </Box>
   );
 }
-
-const dataMock = [
-  {
-    kategori: "Makan",
-    dianggarkan: 500000,
-    terpakai: 50000,
-    tersedia: 450000,
-    subRows: [
-      {
-        kategori: "Matengan di warung",
-        dianggarkan: 300000,
-        terpakai: 50000,
-        tersedia: 250000,
-      },
-      {
-        kategori: "Stok makanan",
-        dianggarkan: 200000,
-        terpakai: 0,
-        tersedia: 0,
-      },
-    ],
-  },
-  {
-    kategori: "Transport",
-    dianggarkan: 100000,
-    terpakai: 22000,
-    tersedia: 78000,
-    subRows: [
-      {
-        kategori: "Bensin Pertalite",
-        dianggarkan: 100000,
-        terpakai: 22000,
-        tersedia: 78000,
-      },
-    ],
-  },
-];
 
 export { TabelBudget };
