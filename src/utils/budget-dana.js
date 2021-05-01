@@ -43,7 +43,8 @@ function useDanaBudget() {
     (jumlah) => dispatch({ type: "DIPAKAI", dipakai: jumlah }),
     []
   );
-  return [danaBudget, { setTotal, setTerpakai }];
+
+  return { ...danaBudget, setTotal, setTerpakai };
 }
 
 export { useDanaBudget };

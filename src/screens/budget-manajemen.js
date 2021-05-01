@@ -19,16 +19,41 @@ function DisplayBulan(props) {
   );
 }
 
-function DisplayBajet(props) {
+const totalByField = (arr, fieldJumlah) => {
+  return arr.length > 0
+    ? arr.reduce((total, line) => total + line[fieldJumlah], 0)
+    : 0;
+};
+
+function DisplayDanaBudget({ danaLines, budgetLines }) {
+  const dana = useDanaBudget();
+
+  React.useEffect(() => {
+    if (!danaLines.data) {
+      return;
+    }
+    const totalDana = totalByField(danaLines.data, "jumlah");
+    dana.setTotal(totalDana);
+  }, [dana, danaLines.data]);
+
+  React.useEffect(() => {
+    if (!budgetLines.data) {
+      return;
+    }
+    const totalBudget = totalByField(budgetLines.data, "dianggarkan");
+    dana.setTerpakai(totalBudget);
+  }, [dana, budgetLines.data]);
+
   return (
     <Box
-      p="12"
+      py="12"
+      px="8"
       mt="12"
-      // bgColor="whiteAlpha.500"
+      bgColor="gray.50"
       borderWidth="1px"
       borderColor="gray.200"
-      borderRadius="sm"
-      // shadow="base"
+      borderRadius="lg"
+      shadow="base"
       fontSize="4xl"
       fontWeight="bold"
       color="gray.500"
@@ -36,7 +61,7 @@ function DisplayBajet(props) {
       <chakra.span fontWeight="normal" color="gray.300">
         Rp
       </chakra.span>{" "}
-      {props.children}
+      {dana.sisa}
       <chakra.span fontWeight="normal" color="gray.300">
         ,00
       </chakra.span>
@@ -44,18 +69,10 @@ function DisplayBajet(props) {
   );
 }
 
-const totalByField = (arr, fieldJumlah) => {
-  return arr.reduce((total, line) => total + line[fieldJumlah], 0);
-};
-
 function namaBulan(bulan) {
   switch (bulan) {
-    // ...
     case 11:
       return "Desember";
-
-    // ...
-
     default:
       console.error("Bulan gak disupport");
   }
@@ -81,29 +98,12 @@ function ManajemenBudgetScreen() {
 
   const danaLines = useDanaBulanIni();
   const budgetLines = useBudgetLines();
-  const [{ sisa: danaTersedia }, { setTotal, setTerpakai }] = useDanaBudget();
-
-  React.useEffect(() => {
-    if (!danaLines.data || danaLines.isPreviousData) {
-      return;
-    }
-    const totalDana = totalByField(danaLines.data, "jumlah");
-    setTotal(totalDana);
-  }, [setTotal, danaLines.isPreviousData, danaLines.data]);
-
-  React.useEffect(() => {
-    if (!budgetLines.data || budgetLines.isPreviousData) {
-      return;
-    }
-    const totalAnggaran = totalByField(budgetLines.data, "dianggarkan");
-    setTerpakai(totalAnggaran);
-  }, [setTerpakai, budgetLines.isPreviousData, budgetLines.data]);
 
   return (
     <Box>
       <Center flexDirection="column">
         <DisplayBulan mt="12">{namaBulan(bulan)}</DisplayBulan>
-        <DisplayBajet>{danaTersedia}</DisplayBajet>
+        <DisplayDanaBudget danaLines={danaLines} budgetLines={budgetLines} />
       </Center>
 
       <BudgetLinesDataView budgetLines={budgetLines} bulan="Desember" />
