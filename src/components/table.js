@@ -21,6 +21,11 @@ const IndeterminateCheckbox = React.forwardRef(
   }
 );
 
+function CellDanaTersedia({ dianggarkan = 0, terpakai = 0 }) {
+  const danaTersedia = dianggarkan - terpakai;
+  return <span>{danaTersedia}</span>;
+}
+
 function KontainerTabel({ children }) {
   return (
     <Box
@@ -73,6 +78,12 @@ function TabelBudget({ data }) {
         Header: "Tersedia",
         accessor: "tersedia",
         isNumeric: true,
+        Cell: ({ row }) => {
+          const { dianggarkan, terpakai } = row.values;
+          return (
+            <CellDanaTersedia dianggarkan={dianggarkan} terpakai={terpakai} />
+          );
+        },
       },
     ],
     []

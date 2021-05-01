@@ -4,7 +4,6 @@
     "kategori": "Bulanan Kos",
     "bulan": "Desember",
     "dianggarkan": 0,
-    "tersedia": 0,
     "terpakai": 0,
     "budgetId": 2
   },
@@ -13,7 +12,6 @@
     "kategori": "Matengan di warung",
     "bulan": "Desember",
     "dianggarkan": 0,
-    "tersedia": 0,
     "terpakai": 0,
     "budgetId": 2
   },
@@ -22,7 +20,6 @@
     "kategori": "Makanan ringan",
     "bulan": "Desember",
     "dianggarkan": 0,
-    "tersedia": 0,
     "terpakai": 0,
     "budgetId": 2
   },
@@ -31,7 +28,6 @@
     "kategori": "Bensin: Pertalite",
     "bulan": "Desember",
     "dianggarkan": 0,
-    "tersedia": 0,
     "terpakai": 0,
     "budgetId": 2
   },
@@ -40,7 +36,6 @@
     "kategori": "Air minum galon",
     "bulan": "Desember",
     "dianggarkan": 0,
-    "tersedia": 0,
     "terpakai": 0,
     "budgetId": 2
   },
@@ -49,7 +44,6 @@
     "kategori": "Kebutuhan rumah tangga",
     "bulan": "Desember",
     "dianggarkan": 0,
-    "tersedia": 0,
     "terpakai": 0,
     "budgetId": 2
   },
@@ -58,7 +52,6 @@
     "kategori": "Makanan kucing",
     "bulan": "Desember",
     "dianggarkan": 0,
-    "tersedia": 0,
     "terpakai": 0,
     "budgetId": 2
   }
