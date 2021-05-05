@@ -1,70 +1,45 @@
-# Getting Started with Create React App
+Hai, ini pet projek yang "kupelihara" untuk bereksplorasi dengan React dan animasi UI.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Demonya ada di sini (WIP): [https://sakitkepala.github.io/wkwkbudgetapp](https://sakitkepala.github.io/wkwkbudgetapp)
 
-## Available Scripts
+> Demo dan source code masih tahap _work in progress_, harapkan demonya belum stabil, bisa berubah sewaktu-waktu, dan bahkan ada yang tidak jalan. Sedang saya kerjakan :)
 
-In the project directory, you can run:
+Saya ingin fokus pada implementasi animasi user interface-nya di sini. Hanya saja, saya pikir tetap butuh fitur yang bisa jalan, minimal satu siklus interaksi supaya bisa lebih mensimulasikan bagaimana user berinteraksi dengan fitur UI. Jadi masih ada fitur-fitur yang belum diimplentasi di sini, dan belum ada siklus CRUD lengkap untuk tiap model datanya.
 
-### `yarn start`
+Awalnya saya pakai Next.js dengan alasan supaya bisa di*build* jadi halaman statis dan dideploy di Github Pages untuk demo. Lalu saya pikir lebih baik dengan Create React App saja supaya bisa lebih fleksibel dalam bereksplorasi. Ada fitur yang sudah saya buat ketika masih pakai Next.js tapi belum dimigrasikan ke sini.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Repo lamanya bisa dilihat di sini: [https://github.com/sakitkepala/budgetapp-spike-with-nextjs](https://github.com/sakitkepala/budgetapp-spike-with-nextjs).
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Stack
 
-### `yarn test`
+Untuk awal development ini, saya ingin buat prototip dengan cepat. Jadi saya pakai beberapa library untuk membantuku:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- [Create React App](https://create-react-app.dev/docs/getting-started)
+- [Chakra UI](https://chakra-ui.com/docs/getting-started)
+- ~~Reach Router~~ React Router, untuk pakai _[hash routing](https://reactrouter.com/web/api/HashRouter)_-nya
+- [Framer Motion](https://www.framer.com/api/motion/)
+- MSW, untuk [mocking server/back-end REST](https://mswjs.io/docs/getting-started/mocks/rest-api)
+- [React Query](https://react-query.tanstack.com/overview)
 
-### `yarn build`
+Chakra UI lumayan _awesome_ juga untuk buat UI: lumayan membantu terutama untuk urusan accessibility dan dalam hal menangani [_focus management_](https://chakra-ui.com/docs/overlay/modal#keyboard-and-focus-management), sehingga di tahap ini saya tidak perlu memikirkan masalah ini dulu. Saya ingin merefaktornya nanti, mungkin pindah ke Styled Component atau Emotion, untuk mengimplementasinya sendiri di tahap berikutnya. Framer Motion juga _awesome_, dan untuk animasi, saya tidak kepikiran library animasi lain, kecuali mungkin [GSAP](https://greensock.com/docs/v3/GSAP)&mdash;tapi perlu effort bikin wrapper Reactnya karena implementasi GSAP lebih imperatif.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Stack di atas sepenuhnya dipilih dari apa yang terpikirkan saat itu: tidak ada pertimbangan khusus kecuali selera. Terkhusus React Query, saya pilih karena kesulitan memilih solusi dalam hal manajemen state karena banyaknya pilihan di ekosistem React. Akhirnya saya mengikuti [ide dan anjuran Kent C. Dodds](https://kentcdodds.com/blog/application-state-management-with-react) soal manajemen state berdasarkan [pengalamannya di Paypal](https://epicreact.dev/my-state-management-mistake/).
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+# Milestones
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Beberapa fitur yang mau kuimplementasikan (tapi belum):
 
-### `yarn eject`
+- [ ] Otentikasi user
+- [ ] Animasi transisi routing dan _micro-interaction_
+- [ ] Dashboard dan visualisasi data
+- [ ] Shortcut kibor dan _command pallet_ (seperti fitur VS Code)
+- [ ] Unit test dan integration test
+- [ ] Theming
+- [ ] Layout responsif
+- [ ] Halaman pengunjung tanpa otentikasi
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+_Stay tuned!_
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+# Terima kasih!
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `yarn build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Terima kasih sudah mampir. Silakan posting di diskusi di atas kalau pingin sapa-sapa atau kasih masukan. Ayo kita ngoprek bareng :)
