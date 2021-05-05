@@ -1,6 +1,6 @@
 Hai, ini pet projek yang "kupelihara" untuk bereksplorasi dengan React dan animasi UI.
 
-Demonya ada di sini (WIP): [https://sakitkepala.github.io/wkwkbudgetapp](https://sakitkepala.github.io/wkwkbudgetapp)
+Demonya ada di sini (WIP): [https://sakitkepala.github.io/wkwkbudgetapp/#/u/budget](https://sakitkepala.github.io/wkwkbudgetapp/#/u/budget)
 
 > Demo dan source code masih tahap _work in progress_, harapkan demonya belum stabil, bisa berubah sewaktu-waktu, dan bahkan ada yang tidak jalan. Sedang saya kerjakan :)
 
