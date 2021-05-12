@@ -26,7 +26,7 @@ function useBudgetSetup() {
       },
       (error) => {
         setIsLoading(false);
-        console.log("Error:", error.message);
+        console.error("Error:", error.message);
       }
     );
   }, [isBudgetSiap, isLoading]);
