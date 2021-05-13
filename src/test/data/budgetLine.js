@@ -26,4 +26,4 @@ async function update(valueObj) {
   return read(valueObj.id);
 }
 
-export { readAll, searchByField, update };
+export { read, readAll, searchByField, update };

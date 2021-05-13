@@ -42,7 +42,7 @@ function KontainerTabel({ children }) {
   );
 }
 
-function TabelBudget({ data }) {
+function TabelBudget({ data, lineDiseleksi, onSeleksi }) {
   const columns = React.useMemo(
     () => [
       {
@@ -53,12 +53,28 @@ function TabelBudget({ data }) {
             <SunIcon />
           </chakra.span>
         ),
-        Cell: ({ row }) =>
-          row.canExpand && (
-            <chakra.span {...row.getToggleRowExpandedProps()}>
-              {row.isExpanded ? <ChevronDownIcon /> : <ChevronRightIcon />}
-            </chakra.span>
-          ),
+        Cell: ({ row }) => {
+          return (
+            <>
+              {row.canExpand && (
+                <chakra.span {...row.getToggleRowExpandedProps()}>
+                  {row.isExpanded ? <ChevronDownIcon /> : <ChevronRightIcon />}
+                </chakra.span>
+              )}
+              <chakra.span>
+                <input
+                  type="radio"
+                  name="budgetline"
+                  value={row.original.id}
+                  selected={lineDiseleksi === row.original.id}
+                  onChange={() => {
+                    onSeleksi(row.original.id);
+                  }}
+                />
+              </chakra.span>
+            </>
+          );
+        },
       },
       {
         Header: "Kategori",
@@ -91,30 +107,25 @@ function TabelBudget({ data }) {
 
   const konfigTabel = { data, columns };
 
-  const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    rows,
-    prepareRow,
-  } = useTable(konfigTabel, useGroupBy, useExpanded, useRowSelect, (hooks) => {
-    hooks.visibleColumns.push((columns) => [
-      {
-        id: "seleksi",
-        Header: ({ getToggleAllRowsSelectedProps }) => (
-          <div>
-            <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-          </div>
-        ),
-        Cell: ({ row }) => (
-          <div>
-            <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-          </div>
-        ),
-      },
-      ...columns,
-    ]);
-  });
+  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
+    useTable(konfigTabel, useGroupBy, useExpanded, useRowSelect, (hooks) => {
+      hooks.visibleColumns.push((columns) => [
+        {
+          id: "seleksi",
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <div>
+              <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+            </div>
+          ),
+          Cell: ({ row }) => (
+            <div>
+              <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+            </div>
+          ),
+        },
+        ...columns,
+      ]);
+    });
 
   return (
     <KontainerTabel>

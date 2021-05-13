@@ -3,7 +3,7 @@ import { Box, Center, chakra, Grid, Text } from "@chakra-ui/react";
 import { useQuery } from "react-query";
 import { client } from "../utils";
 import { useSearchDanaLines } from "../utils/dana-lines";
-import { useSearchBudgetLines } from "../utils/budget-lines";
+import { useBudgetLine, useSearchBudgetLines } from "../utils/budget-lines";
 import { TabelBudget } from "../components/table";
 
 function DisplayBulan(props) {
@@ -99,10 +99,20 @@ function DisplayDanaBudget({ budgetId }) {
 }
 
 function InfoDetail({ id }) {
+  const line = useBudgetLine(id);
+
   return (
     <Box>
-      <Text>Info (to be developed)</Text>
+      <Text>...to be developed</Text>
+      <Text>Info</Text>
       {id ? <Text>ID: {id}</Text> : "Line belum diseleksi."}
+
+      {line.data && (
+        <>
+          <chakra.h1>{line.data.kategori}</chakra.h1>
+          <Text>Dianggarkan: Rp {line.data.dianggarkan}</Text>
+        </>
+      )}
     </Box>
   );
 }
@@ -119,7 +129,11 @@ function DaftarAlokasiAnggaran({ budgetId }) {
     <Grid templateColumns="2fr 1fr" columnGap="16" mt="72px">
       {budgetLines.data ? (
         budgetLines.data?.length > 0 ? (
-          <TabelBudget data={budgetLines.data} onSeleksi={onSeleksi} />
+          <TabelBudget
+            data={budgetLines.data}
+            lineDiseleksi={idDiseleksi}
+            onSeleksi={onSeleksi}
+          />
         ) : (
           <Center>
             <Box bgColor="white" p="26" borderRadius="md">
@@ -150,7 +164,7 @@ function BudgetScreen() {
   }
 
   return (
-    <Box>
+    <Box mx="16">
       <Center flexDirection="column">
         <DisplayBulan mt="12">{budget.bulan || namaBulan(bulan)}</DisplayBulan>
         <DisplayDanaBudget budgetId={budget.id} />

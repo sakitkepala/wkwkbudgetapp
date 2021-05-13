@@ -17,6 +17,19 @@ function useSearchBudgetLines(field, query) {
   return queryInfo;
 }
 
+function useBudgetLine(id) {
+  const line = useQuery(["budget-line", id], async () => {
+    try {
+      const respon = await client(`/budgetLine/${id}`);
+      return respon.data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  });
+
+  return line;
+}
+
 function useBudgetLines() {
   // TODO: ["budget-lines", bulan]
   const queryInfo = useQuery(["budget-lines", "Desember"], async () => {
@@ -67,4 +80,9 @@ function useUpdateBudgetLine() {
   return mutationInfo;
 }
 
-export { useBudgetLines, useUpdateBudgetLine, useSearchBudgetLines };
+export {
+  useBudgetLines,
+  useBudgetLine,
+  useUpdateBudgetLine,
+  useSearchBudgetLines,
+};

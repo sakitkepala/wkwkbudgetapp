@@ -56,6 +56,11 @@ const handlers = [
     // ...
   }),
 
+  rest.get("/budgetLine/:id", async (req, res, context) => {
+    const dataLine = await budgetLineDB.read(Number(req.params.id));
+    return res(context.json({ data: dataLine }));
+  }),
+
   rest.put("/budgetLine/:id", async (req, res, context) => {
     const hasilUpdate = await budgetLineDB.update({
       id: req.params.id,
