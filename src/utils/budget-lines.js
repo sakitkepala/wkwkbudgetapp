@@ -1,6 +1,22 @@
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { client } from "../utils";
 
+function useSearchBudgetLines(field, query) {
+  const queryInfo = useQuery(
+    [`budget-lines-by-${field}`, `${query}`],
+    async () => {
+      try {
+        // TODO:
+        const respon = await client(`/budgetLine?${field}=${query}`);
+        return respon.data;
+      } catch (error) {
+        throw new Error(error);
+      }
+    }
+  );
+  return queryInfo;
+}
+
 function useBudgetLines() {
   // TODO: ["budget-lines", bulan]
   const queryInfo = useQuery(["budget-lines", "Desember"], async () => {
@@ -51,4 +67,4 @@ function useUpdateBudgetLine() {
   return mutationInfo;
 }
 
-export { useBudgetLines, useUpdateBudgetLine };
+export { useBudgetLines, useUpdateBudgetLine, useSearchBudgetLines };

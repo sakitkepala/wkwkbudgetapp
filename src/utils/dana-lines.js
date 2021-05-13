@@ -1,6 +1,22 @@
 import { useQuery } from "react-query";
 import { client } from "../utils";
 
+function useSearchDanaLines(field, query) {
+  const queryInfo = useQuery(
+    [`dana-line-by-${field}`, `${query}`],
+    async () => {
+      try {
+        const respon = await client(`/dana-line?${field}=${query}`);
+        return respon.data;
+      } catch (error) {
+        throw new Error(error);
+      }
+    }
+  );
+  console.log(queryInfo.data);
+  return queryInfo;
+}
+
 function useDanaBulanIni() {
   const queryInfo = useQuery(["dana-bulan-ini"], async () => {
     try {
@@ -16,4 +32,4 @@ function useDanaBulanIni() {
   return queryInfo;
 }
 
-export { useDanaBulanIni };
+export { useSearchDanaLines, useDanaBulanIni };

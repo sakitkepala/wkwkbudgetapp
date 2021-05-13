@@ -40,9 +40,12 @@ const handlers = [
 
   rest.get("/budgetLine", async (req, res, context) => {
     // get lines menurut parameter bulan
-    const queryBulan = req.url.searchParams.get("bulan");
-    if (queryBulan) {
-      const data = await budgetLineDB.searchByField("bulan", queryBulan);
+    const queryBudgetId = req.url.searchParams.get("budgetId");
+    if (queryBudgetId) {
+      const data = await budgetLineDB.searchByField(
+        "budgetId",
+        Number(queryBudgetId)
+      );
       if (!data || data === []) {
         return res(context.status(401));
       }

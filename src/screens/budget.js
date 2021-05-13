@@ -2,7 +2,8 @@ import React from "react";
 import { Box, Center, chakra, Grid, Text } from "@chakra-ui/react";
 import { useQuery } from "react-query";
 import { client } from "../utils";
-import { useBudgetLines } from "../utils/budget-lines";
+import { useSearchDanaLines } from "../utils/dana-lines";
+import { useSearchBudgetLines } from "../utils/budget-lines";
 import { TabelBudget } from "../components/table";
 
 function DisplayBulan(props) {
@@ -19,7 +20,59 @@ function DisplayBulan(props) {
   );
 }
 
-function DisplayDanaBudget({ danaLines, budgetLines }) {
+function reducerDanaBudget(state, action) {
+  const { total, dipakai } = action;
+
+  switch (action.type) {
+    case "TOTAL":
+      if (total === state.total) {
+        return state;
+      }
+      return { ...state, total, sisa: total - state.dipakai };
+
+    case "DIPAKAI":
+      if (dipakai === state.dipakai) {
+        return state;
+      }
+      return { ...state, dipakai, sisa: state.total - dipakai };
+
+    default:
+      console.error("Tipe dispatch gak disupport.");
+      return state;
+  }
+}
+
+const danaAwal = {
+  total: 0,
+  dipakai: 0,
+  sisa: 0,
+};
+
+function DisplayDanaBudget({ budgetId }) {
+  const danaLines = useSearchDanaLines("budgetId", budgetId);
+  const budgetLines = useSearchBudgetLines("budgetId", budgetId);
+
+  const [dana, dispatch] = React.useReducer(reducerDanaBudget, danaAwal);
+  const jumlahDanaTersedia = dana.sisa;
+
+  React.useEffect(() => {
+    if (!danaLines.data) {
+      return;
+    }
+
+    const totalDana = totalByField(danaLines.data, "jumlah");
+    dispatch({ type: "TOTAL", total: totalDana });
+  }, [dana, danaLines.data]);
+
+  React.useEffect(() => {
+    if (!budgetLines.data) {
+      return;
+    }
+
+    const totalBudget = totalByField(budgetLines.data, "dianggarkan");
+    dispatch({ type: "DIPAKAI", dipakai: totalBudget });
+  }, [dana, budgetLines.data]);
+
   return (
     <Box
       py="12"
@@ -37,7 +90,7 @@ function DisplayDanaBudget({ danaLines, budgetLines }) {
       <chakra.span fontWeight="normal" color="gray.300">
         Rp
       </chakra.span>{" "}
-      0
+      <chakra.span>{jumlahDanaTersedia}</chakra.span>
       <chakra.span fontWeight="normal" color="gray.300">
         ,00
       </chakra.span>
@@ -54,8 +107,8 @@ function InfoDetail({ id }) {
   );
 }
 
-function EditorAlokasiAnggaran({ budgetId }) {
-  const { data } = useBudgetLines(budgetId);
+function DaftarAlokasiAnggaran({ budgetId }) {
+  const budgetLines = useSearchBudgetLines("budgetId", budgetId);
   const [idDiseleksi, setIdDiseleksi] = React.useState(null);
 
   function onSeleksi(alokasiId) {
@@ -64,9 +117,9 @@ function EditorAlokasiAnggaran({ budgetId }) {
 
   return (
     <Grid templateColumns="2fr 1fr" columnGap="16" mt="72px">
-      {data ? (
-        data?.length > 0 ? (
-          <TabelBudget data={data} onSeleksi={onSeleksi} />
+      {budgetLines.data ? (
+        budgetLines.data?.length > 0 ? (
+          <TabelBudget data={budgetLines.data} onSeleksi={onSeleksi} />
         ) : (
           <Center>
             <Box bgColor="white" p="26" borderRadius="md">
@@ -77,7 +130,7 @@ function EditorAlokasiAnggaran({ budgetId }) {
       ) : (
         <Center>
           <Box bgColor="white" p="26" borderRadius="md">
-            Sedang siap-siap...
+            Sedang menyiapkan tabel...
           </Box>
         </Center>
       )}
@@ -100,10 +153,10 @@ function BudgetScreen() {
     <Box>
       <Center flexDirection="column">
         <DisplayBulan mt="12">{budget.bulan || namaBulan(bulan)}</DisplayBulan>
-        <DisplayDanaBudget />
+        <DisplayDanaBudget budgetId={budget.id} />
       </Center>
 
-      <EditorAlokasiAnggaran budgetId={budget.id} />
+      <DaftarAlokasiAnggaran budgetId={budget.id} />
     </Box>
   );
 }
@@ -133,10 +186,10 @@ function useBudget() {
   return budget;
 }
 
-// const totalByField = (arr, fieldJumlah) => {
-//   return arr.length > 0
-//     ? arr.reduce((total, line) => total + line[fieldJumlah], 0)
-//     : 0;
-// };
+const totalByField = (arr, fieldJumlah) => {
+  return arr.length > 0
+    ? arr.reduce((total, line) => total + line[fieldJumlah], 0)
+    : 0;
+};
 
 export { BudgetScreen };
