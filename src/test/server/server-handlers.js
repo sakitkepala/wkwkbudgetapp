@@ -23,6 +23,12 @@ const handlers = [
     return res(context.json({ data }));
   }),
 
+  rest.get("/budget", async (req, res, context) => {
+    // get latest budget
+    const data = await budgetDB.readLatest();
+    return res(context.json({ data }));
+  }),
+
   rest.get("/budget/bulan-ini", async (req, res, context) => {
     // get latest budget
     const data = await budgetDB.readLatest();

@@ -1,9 +1,9 @@
 import React from "react";
-import { Box, Center, chakra } from "@chakra-ui/react";
-import { BudgetLinesDataView } from "../components/budget-line";
-import { useDanaBulanIni } from "../utils/dana-lines";
+import { Box, Center, chakra, Grid, Text } from "@chakra-ui/react";
+import { useQuery } from "react-query";
+import { client } from "../utils";
 import { useBudgetLines } from "../utils/budget-lines";
-import { useDanaBudget } from "../utils/budget-dana";
+import { TabelBudget } from "../components/table";
 
 function DisplayBulan(props) {
   return (
@@ -19,31 +19,7 @@ function DisplayBulan(props) {
   );
 }
 
-const totalByField = (arr, fieldJumlah) => {
-  return arr.length > 0
-    ? arr.reduce((total, line) => total + line[fieldJumlah], 0)
-    : 0;
-};
-
 function DisplayDanaBudget({ danaLines, budgetLines }) {
-  const dana = useDanaBudget();
-
-  React.useEffect(() => {
-    if (!danaLines.data) {
-      return;
-    }
-    const totalDana = totalByField(danaLines.data, "jumlah");
-    dana.setTotal(totalDana);
-  }, [dana, danaLines.data]);
-
-  React.useEffect(() => {
-    if (!budgetLines.data) {
-      return;
-    }
-    const totalBudget = totalByField(budgetLines.data, "dianggarkan");
-    dana.setTerpakai(totalBudget);
-  }, [dana, budgetLines.data]);
-
   return (
     <Box
       py="12"
@@ -61,12 +37,79 @@ function DisplayDanaBudget({ danaLines, budgetLines }) {
       <chakra.span fontWeight="normal" color="gray.300">
         Rp
       </chakra.span>{" "}
-      {dana.sisa}
+      0
       <chakra.span fontWeight="normal" color="gray.300">
         ,00
       </chakra.span>
     </Box>
   );
+}
+
+function InfoDetail({ id }) {
+  return (
+    <Box>
+      <Text>Info (to be developed)</Text>
+      {id ? <Text>ID: {id}</Text> : "Line belum diseleksi."}
+    </Box>
+  );
+}
+
+function EditorAlokasiAnggaran({ budgetId }) {
+  const { data } = useBudgetLines(budgetId);
+  const [idDiseleksi, setIdDiseleksi] = React.useState(null);
+
+  function onSeleksi(alokasiId) {
+    setIdDiseleksi(alokasiId);
+  }
+
+  return (
+    <Grid templateColumns="2fr 1fr" columnGap="16" mt="72px">
+      {data ? (
+        data?.length > 0 ? (
+          <TabelBudget data={data} onSeleksi={onSeleksi} />
+        ) : (
+          <Center>
+            <Box bgColor="white" p="26" borderRadius="md">
+              Tidak ada data.
+            </Box>
+          </Center>
+        )
+      ) : (
+        <Center>
+          <Box bgColor="white" p="26" borderRadius="md">
+            Sedang siap-siap...
+          </Box>
+        </Center>
+      )}
+
+      <InfoDetail id={idDiseleksi} />
+    </Grid>
+  );
+}
+
+const bulan = getBulan(11);
+
+function BudgetScreen() {
+  const { data: budget, isLoading } = useBudget();
+
+  if (isLoading) {
+    return <Center>Sedang siap-siap...</Center>;
+  }
+
+  return (
+    <Box>
+      <Center flexDirection="column">
+        <DisplayBulan mt="12">{budget.bulan || namaBulan(bulan)}</DisplayBulan>
+        <DisplayDanaBudget />
+      </Center>
+
+      <EditorAlokasiAnggaran budgetId={budget.id} />
+    </Box>
+  );
+}
+
+function getBulan(dummyBulan) {
+  return dummyBulan || new Date().getMonth();
 }
 
 function namaBulan(bulan) {
@@ -78,42 +121,22 @@ function namaBulan(bulan) {
   }
 }
 
-function getBulan(dummyBulan) {
-  return dummyBulan || new Date().getMonth();
+function useBudget() {
+  const budget = useQuery(["budget-default"], async () => {
+    try {
+      const responBudget = await client("/budget");
+      return responBudget.data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  });
+  return budget;
 }
 
-/**
- * Screen manajemen budget menampilkan informasi untuk budgeting tiap bulannya,
- * sehingga data yang tampil adalah data budgeting untuk bulan ini.
- *
- * Data dan state yang dibutuhkan untuk menampilkan UI di sini:
- * 1. sekarang bulan apa?
- * 2. berapa dana yang tersedia untuk budgeting?
- * 3. apa saja yang dibudget untuk bulan ini?
- * ...
- */
-
-function BudgetScreen() {
-  // Tiap render bisa secara otomatis dapat data Date bulan dan tahun sekarang
-  // dengan menginstansiasi objek Date. Kemudian, karena requirement saat ini
-  // belum perlu mengelola bulan & tahun saat ini sebagai state karena tidak ada
-  // kondisi untuk mengubah state tersebut di renderan saat ini, jadi hook di
-  // bawah bisa dengan aman mengasumsikan date saat ini langsung dari inisiasi
-  // objek `Date()` saja.
-  const danaLines = useDanaBulanIni();
-  const budgetLines = useBudgetLines();
-
-  const bulan = getBulan(11);
-
-  return (
-    <Box>
-      <Center flexDirection="column">
-        <DisplayBulan mt="12">{namaBulan(bulan)}</DisplayBulan>
-        <DisplayDanaBudget danaLines={danaLines} budgetLines={budgetLines} />
-      </Center>
-      <BudgetLinesDataView budgetLines={budgetLines} />
-    </Box>
-  );
-}
+// const totalByField = (arr, fieldJumlah) => {
+//   return arr.length > 0
+//     ? arr.reduce((total, line) => total + line[fieldJumlah], 0)
+//     : 0;
+// };
 
 export { BudgetScreen };
