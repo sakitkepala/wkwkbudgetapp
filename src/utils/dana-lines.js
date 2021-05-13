@@ -13,7 +13,6 @@ function useSearchDanaLines(field, query) {
       }
     }
   );
-  console.log(queryInfo.data);
   return queryInfo;
 }
 
