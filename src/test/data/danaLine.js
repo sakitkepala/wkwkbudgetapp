@@ -4,8 +4,8 @@ async function readAll() {
   return dataDanaLine;
 }
 
-async function readByField(field, value) {
+async function searchByField(field, value) {
   return dataDanaLine.filter((line) => line[field] === value);
 }
 
-export { readAll, readByField };
+export { readAll, searchByField };

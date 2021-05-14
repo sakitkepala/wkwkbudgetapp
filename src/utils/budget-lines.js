@@ -6,8 +6,7 @@ function useSearchBudgetLines(field, query) {
     [`budget-lines-by-${field}`, `${query}`],
     async () => {
       try {
-        // TODO:
-        const respon = await client(`/budgetLine?${field}=${query}`);
+        const respon = await client(`/budget-line?${field}=${query}`);
         return respon.data;
       } catch (error) {
         throw new Error(error);
@@ -20,7 +19,7 @@ function useSearchBudgetLines(field, query) {
 function useBudgetLine(id) {
   const line = useQuery(["budget-line", id], async () => {
     try {
-      const respon = await client(`/budgetLine/${id}`);
+      const respon = await client(`/budget-line/${id}`);
       return respon.data;
     } catch (error) {
       throw new Error(error);
@@ -30,29 +29,13 @@ function useBudgetLine(id) {
   return line;
 }
 
-function useBudgetLines() {
-  // TODO: ["budget-lines", bulan]
-  const queryInfo = useQuery(["budget-lines", "Desember"], async () => {
-    try {
-      // dummy hardcoded endpoint
-      // TODO: abstraksikan, misal: `/budgetLine/${bulan}`
-      const respon = await client("/budgetLine?bulan=Desember");
-      return respon.data;
-    } catch (error) {
-      throw new Error(error);
-    }
-  });
-
-  return { ...queryInfo, budgetLines: queryInfo.data };
-}
-
 function useUpdateBudgetLine() {
   const queryClient = useQueryClient();
 
   const mutationInfo = useMutation(
     async (updatedLine) => {
       try {
-        const respon = await client(`/budgetLine/${updatedLine.id}`, {
+        const respon = await client(`/budget-line/${updatedLine.id}`, {
           method: "PUT",
           data: updatedLine,
         });
@@ -65,6 +48,7 @@ function useUpdateBudgetLine() {
       // Memperbarui cache data budget lines supaya komponen yang
       // pakai data ini render ulang dengan data yang baru
       onSuccess: (updatedLine) => {
+        // TODO: ini perbaiki key sama query-nya, karena udah gak sinkron
         const budgetLinesKey = ["budget-lines", "Desember"];
         const linesData = queryClient.getQueryData(budgetLinesKey);
 
@@ -80,9 +64,4 @@ function useUpdateBudgetLine() {
   return mutationInfo;
 }
 
-export {
-  useBudgetLines,
-  useBudgetLine,
-  useUpdateBudgetLine,
-  useSearchBudgetLines,
-};
+export { useBudgetLine, useSearchBudgetLines, useUpdateBudgetLine };

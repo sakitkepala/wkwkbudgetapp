@@ -157,10 +157,10 @@ function DaftarAlokasiAnggaran({ budgetId }) {
 const bulan = getBulan(11);
 
 function BudgetScreen() {
-  const { data: budget, isLoading } = useBudget();
+  const { data: budget, isLoading } = useBudgetLatest();
 
   if (isLoading) {
-    return <Center>Sedang siap-siap...</Center>;
+    return <Center>Memuat screen...</Center>;
   }
 
   return (
@@ -188,10 +188,10 @@ function namaBulan(bulan) {
   }
 }
 
-function useBudget() {
+function useBudgetLatest() {
   const budget = useQuery(["budget-default"], async () => {
     try {
-      const responBudget = await client("/budget");
+      const responBudget = await client("/budget?latest=true");
       return responBudget.data;
     } catch (error) {
       throw new Error(error);
