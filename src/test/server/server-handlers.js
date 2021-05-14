@@ -1,5 +1,6 @@
 import { rest } from "msw";
 import * as akunDB from "../data/akun";
+import * as kategoriDB from "../data/kategori";
 import * as budgetDB from "../data/budget";
 import * as budgetLineDB from "../data/budgetLine";
 import * as danaLineDB from "../data/danaLine";
@@ -65,6 +66,17 @@ const handlers = [
       );
     }
     return res(context.json({ data: akun }));
+  }),
+
+  rest.get("/kategori", async (req, res, context) => {
+    const kategori = await kategoriDB.readAll();
+    if (!kategori) {
+      return res(
+        context.status(404),
+        context.json({ status: 404, message: "Tidak ada akun" })
+      );
+    }
+    return res(context.json({ data: kategori }));
   }),
 ];
 

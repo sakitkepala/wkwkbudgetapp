@@ -1,5 +1,21 @@
 import React from "react";
-import { Box, Center, chakra, Grid, Text } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Center,
+  chakra,
+  Grid,
+  Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalOverlay,
+  Select,
+  Text,
+  useDisclosure,
+} from "@chakra-ui/react";
 import { useQuery } from "react-query";
 import { client } from "../utils";
 import { useSearchDanaLines } from "../utils/dana-lines";
@@ -43,9 +59,9 @@ function reducerDanaBudget(state, action) {
 }
 
 const danaAwal = {
-  total: 0,
-  dipakai: 0,
-  sisa: 0,
+  total: 0, // dari total semua dana akun yang ditampung
+  dipakai: 0, // dari total jumlah alokasi di semua kategori
+  sisa: 0, // nilai turunan yang berguna sebagai indikator untuk user
 };
 
 function DisplayDanaBudget({ budgetId }) {
@@ -154,6 +170,85 @@ function DaftarAlokasiAnggaran({ budgetId }) {
   );
 }
 
+function ModalBelanja({ budgetId }) {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const listKategori = useQuery(["kategori-list"], async () => {
+    try {
+      const respon = await client(`/kategori`);
+      return respon.data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  });
+
+  const [inputNama, setInputNama] = React.useState("");
+  const [inputKategori, setInputKategori] = React.useState("");
+  const [inputJumlah, setInputJumlah] = React.useState(undefined);
+
+  function onSeleksiKategori(ev) {
+    setInputKategori(ev.target.value);
+  }
+
+  return (
+    <>
+      <Button mt="4" colorScheme="telegram" onClick={onOpen}>
+        + Belanja
+      </Button>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+
+        <ModalContent>
+          <ModalCloseButton />
+
+          <ModalBody mt="10">
+            <Select
+              placeholder="Kategori"
+              value={inputKategori}
+              onChange={onSeleksiKategori}
+            >
+              {listKategori.data ? (
+                listKategori.data.map((kategori) => (
+                  <option key={kategori.id} value={kategori.id}>
+                    {kategori.nama}
+                  </option>
+                ))
+              ) : (
+                <option>Kategori</option>
+              )}
+            </Select>
+
+            <Input
+              placeholder="Nama"
+              bgColor="gray.100"
+              value={inputNama}
+              onChange={(ev) => {
+                setInputNama(ev.target.value);
+              }}
+            />
+
+            <Input
+              placeholder="Jumlah"
+              bgColor="gray.100"
+              value={inputJumlah}
+              onChange={(ev) => {
+                setInputJumlah(Number(ev.target.value));
+              }}
+            />
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="green" mr={3}>
+              Simpan
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+    </>
+  );
+}
+
 const bulan = getBulan(11);
 
 function BudgetScreen() {
@@ -168,6 +263,7 @@ function BudgetScreen() {
       <Center flexDirection="column">
         <DisplayBulan mt="12">{budget.bulan || namaBulan(bulan)}</DisplayBulan>
         <DisplayDanaBudget budgetId={budget.id} />
+        <ModalBelanja budgetId={budget.id} />
       </Center>
 
       <DaftarAlokasiAnggaran budgetId={budget.id} />
