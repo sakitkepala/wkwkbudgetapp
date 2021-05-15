@@ -4,6 +4,7 @@ import * as kategoriDB from "../data/kategori";
 import * as budgetDB from "../data/budget";
 import * as budgetLineDB from "../data/budgetLine";
 import * as danaLineDB from "../data/danaLine";
+import * as belanjaDB from "../data/belanja";
 
 const handlers = [
   rest.get("/budget", async (req, res, context) => {
@@ -77,6 +78,20 @@ const handlers = [
       );
     }
     return res(context.json({ data: kategori }));
+  }),
+
+  rest.post("/belanja", async (req, res, context) => {
+    const body = JSON.parse(req.body);
+    const val = {
+      nama: body.nama,
+      kategoriId: Number(body.kategoriId),
+      jumlah: Number(body.jumlah),
+      budgetId: Number(body.budgetId),
+    };
+
+    const data = await belanjaDB.create(val);
+
+    return res(context.json({ data }));
   }),
 ];
 

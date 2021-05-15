@@ -4,6 +4,7 @@ import {
   Button,
   Center,
   chakra,
+  FormControl,
   Grid,
   Input,
   Modal,
@@ -16,7 +17,7 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { client } from "../utils";
 import { useSearchDanaLines } from "../utils/dana-lines";
 import { useBudgetLine, useSearchBudgetLines } from "../utils/budget-lines";
@@ -173,6 +174,18 @@ function DaftarAlokasiAnggaran({ budgetId }) {
 function ModalBelanja({ budgetId }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const belanja = useMutation(async (belanjaBaru) => {
+    try {
+      const respon = await client("/belanja", {
+        method: "POST",
+        data: belanjaBaru,
+      });
+      return respon.data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  });
+
   const listKategori = useQuery(["kategori-list"], async () => {
     try {
       const respon = await client(`/kategori`);
@@ -183,11 +196,37 @@ function ModalBelanja({ budgetId }) {
   });
 
   const [inputNama, setInputNama] = React.useState("");
-  const [inputKategori, setInputKategori] = React.useState("");
-  const [inputJumlah, setInputJumlah] = React.useState(undefined);
+  const [inputKategoriId, setInputKategoriId] = React.useState("");
+  const [inputJumlah, setInputJumlah] = React.useState("");
+
+  React.useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
+    setInputNama("");
+    setInputKategoriId("");
+    setInputJumlah("");
+  }, [isOpen]);
 
   function onSeleksiKategori(ev) {
-    setInputKategori(ev.target.value);
+    setInputKategoriId(ev.target.value);
+  }
+
+  function onSubmitBelanja(ev) {
+    ev.preventDefault();
+    if (!inputNama || !inputKategoriId || !inputJumlah) {
+      console.error("ada yang kosong");
+      return;
+    }
+
+    belanja.mutate({
+      nama: inputNama,
+      kategoriId: inputKategoriId,
+      jumlah: inputJumlah,
+      budgetId,
+    });
+    onClose();
   }
 
   return (
@@ -202,47 +241,61 @@ function ModalBelanja({ budgetId }) {
         <ModalContent>
           <ModalCloseButton />
 
-          <ModalBody mt="10">
-            <Select
-              placeholder="Kategori"
-              value={inputKategori}
-              onChange={onSeleksiKategori}
-            >
-              {listKategori.data ? (
-                listKategori.data.map((kategori) => (
-                  <option key={kategori.id} value={kategori.id}>
-                    {kategori.nama}
-                  </option>
-                ))
-              ) : (
-                <option>Kategori</option>
-              )}
-            </Select>
+          <form onSubmit={onSubmitBelanja}>
+            <ModalBody mt="10">
+              <FormControl>
+                <Select
+                  id="kategori"
+                  name="kategori"
+                  value={inputKategoriId}
+                  placeholder="Kategori belanja"
+                  onChange={onSeleksiKategori}
+                >
+                  {listKategori.data ? (
+                    listKategori.data.map((kategori) => (
+                      <option key={kategori.id} value={kategori.id}>
+                        {kategori.nama}
+                      </option>
+                    ))
+                  ) : (
+                    <option>Sedang memuat kategori...</option>
+                  )}
+                </Select>
+              </FormControl>
 
-            <Input
-              placeholder="Nama"
-              bgColor="gray.100"
-              value={inputNama}
-              onChange={(ev) => {
-                setInputNama(ev.target.value);
-              }}
-            />
+              <FormControl>
+                <Input
+                  id="nama"
+                  name="nama"
+                  bgColor="gray.100"
+                  value={inputNama}
+                  placeholder="Deskripsi belanja..."
+                  onChange={(ev) => {
+                    setInputNama(ev.target.value);
+                  }}
+                />
+              </FormControl>
 
-            <Input
-              placeholder="Jumlah"
-              bgColor="gray.100"
-              value={inputJumlah}
-              onChange={(ev) => {
-                setInputJumlah(Number(ev.target.value));
-              }}
-            />
-          </ModalBody>
+              <FormControl>
+                <Input
+                  id="jumlah"
+                  name="jumlah"
+                  bgColor="gray.100"
+                  value={inputJumlah}
+                  placeholder="Jumlah"
+                  onChange={(ev) => {
+                    setInputJumlah(ev.target.value);
+                  }}
+                />
+              </FormControl>
+            </ModalBody>
 
-          <ModalFooter>
-            <Button colorScheme="green" mr={3}>
-              Simpan
-            </Button>
-          </ModalFooter>
+            <ModalFooter>
+              <Button type="submit" colorScheme="green" mr={3}>
+                Simpan
+              </Button>
+            </ModalFooter>
+          </form>
         </ModalContent>
       </Modal>
     </>
