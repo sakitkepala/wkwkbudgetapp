@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "kategori": "Bulanan Kos",
+    "kategoriId": 1,
     "bulan": "Desember",
     "dianggarkan": 0,
     "terpakai": 0,
@@ -9,7 +9,7 @@
   },
   {
     "id": 2,
-    "kategori": "Matengan di warung",
+    "kategoriId": 2,
     "bulan": "Desember",
     "dianggarkan": 0,
     "terpakai": 0,
@@ -17,7 +17,7 @@
   },
   {
     "id": 3,
-    "kategori": "Makanan ringan",
+    "kategoriId": 3,
     "bulan": "Desember",
     "dianggarkan": 0,
     "terpakai": 0,
@@ -25,7 +25,7 @@
   },
   {
     "id": 4,
-    "kategori": "Bensin: Pertalite",
+    "kategoriId": 4,
     "bulan": "Desember",
     "dianggarkan": 0,
     "terpakai": 0,
@@ -33,7 +33,7 @@
   },
   {
     "id": 5,
-    "kategori": "Air minum galon",
+    "kategoriId": 5,
     "bulan": "Desember",
     "dianggarkan": 0,
     "terpakai": 0,
@@ -41,7 +41,7 @@
   },
   {
     "id": 6,
-    "kategori": "Kebutuhan rumah tangga",
+    "kategoriId": 6,
     "bulan": "Desember",
     "dianggarkan": 0,
     "terpakai": 0,
@@ -49,7 +49,7 @@
   },
   {
     "id": 7,
-    "kategori": "Makanan kucing",
+    "kategoriId": 7,
     "bulan": "Desember",
     "dianggarkan": 0,
     "terpakai": 0,

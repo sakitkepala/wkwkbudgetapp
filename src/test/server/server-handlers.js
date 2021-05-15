@@ -24,14 +24,33 @@ const handlers = [
     // get lines menurut parameter bulan
     const queryBudgetId = req.url.searchParams.get("budgetId");
     if (queryBudgetId) {
-      const data = await budgetLineDB.searchByField(
+      const dataRaw = await budgetLineDB.searchByField(
         "budgetId",
         Number(queryBudgetId)
       );
 
-      if (!data || data === []) {
+      if (!dataRaw || dataRaw === []) {
         return res(context.status(401));
       }
+
+      // Percobaan untuk lakukan compute di backend
+      const data = await Promise.all(
+        dataRaw.map(async (line) => {
+          const belanjaIds = await belanjaDB.search({
+            kategoriId: line.kategoriId,
+            budgetId: Number(queryBudgetId),
+          });
+
+          if (belanjaIds.length <= 0) {
+            return line;
+          }
+
+          return {
+            ...line,
+            terpakai: belanjaIds.reduce((p, n) => p + n.jumlah, 0),
+          };
+        })
+      );
 
       return res(context.json({ data }));
     }
