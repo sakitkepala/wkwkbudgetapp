@@ -17,23 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { useMutation, useQuery } from "react-query";
 import { client } from "../utils";
-import { useSearchDanaLines } from "../utils/dana-lines";
-import { useSearchBudgetLines } from "../utils/budget-lines";
-import { DaftarAlokasiAnggaran } from "../components/budget";
-
-function DisplayBulan(props) {
-  return (
-    <Box
-      className="display-bulan"
-      textTransform="uppercase"
-      fontSize="2xl"
-      color="gray.300"
-      {...props}
-    >
-      {props.children}
-    </Box>
-  );
-}
+import { DaftarAlokasiAnggaran, DisplayBulan } from "../components/budget";
 
 function reducerDanaBudget(state, action) {
   const { total, dipakai } = action;
@@ -63,30 +47,51 @@ const danaAwal = {
   sisa: 0, // nilai turunan yang berguna sebagai indikator untuk user
 };
 
-function DisplayDanaBudget({ budgetId }) {
-  const danaLines = useSearchDanaLines("budgetId", budgetId);
-  const budgetLines = useSearchBudgetLines("budgetId", budgetId);
+function DisplayDanaBudget({ budget }) {
+  const { data: danaLines } = useQuery(
+    ["dana-lines", `budget-${budget.id}`],
+    async () => {
+      try {
+        return (await client(`/dana-line?budgetId=${budget.id}`)).data;
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
+    { enabled: Boolean(budget) }
+  );
+
+  const { data: budgetLines } = useQuery(
+    ["budget-lines", `budget-${budget.id}`],
+    async () => {
+      try {
+        return (await client(`/budget-line?budgetId=${budget.id}`)).data;
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
+    { enabled: Boolean(budget) }
+  );
 
   const [dana, dispatch] = React.useReducer(reducerDanaBudget, danaAwal);
   const jumlahDanaTersedia = dana.sisa;
 
   React.useEffect(() => {
-    if (!danaLines.data) {
+    if (!danaLines) {
       return;
     }
 
-    const totalDana = totalByField(danaLines.data, "jumlah");
+    const totalDana = totalByField(danaLines, "jumlah");
     dispatch({ type: "TOTAL", total: totalDana });
-  }, [dana, danaLines.data]);
+  }, [dana, danaLines]);
 
   React.useEffect(() => {
-    if (!budgetLines.data) {
+    if (!budgetLines) {
       return;
     }
 
-    const totalBudget = totalByField(budgetLines.data, "dianggarkan");
+    const totalBudget = totalByField(budgetLines, "dianggarkan");
     dispatch({ type: "DIPAKAI", dipakai: totalBudget });
-  }, [dana, budgetLines.data]);
+  }, [dana, budgetLines]);
 
   return (
     <Box
@@ -260,23 +265,15 @@ function BudgetScreen() {
   return (
     <Box mx="16">
       <Center flexDirection="column">
-        <DisplayBulan mt="12">{budget.bulan || namaBulan(11)}</DisplayBulan>
+        <DisplayBulan mt="12" budget={budget} />
         <DisplayDanaBudget budget={budget} />
+
         <ModalBelanja budget={budget} />
       </Center>
 
       <DaftarAlokasiAnggaran budget={budget} />
     </Box>
   );
-}
-
-function namaBulan(bulan) {
-  switch (bulan) {
-    case 11:
-      return "Desember";
-    default:
-      console.error("Bulan gak disupport");
-  }
 }
 
 const totalByField = (arr, fieldJumlah) => {

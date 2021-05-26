@@ -6,6 +6,27 @@ import { client } from "../utils";
 import { useBudgetLine } from "../utils/budget-lines";
 import { TabelBudget } from "./table";
 
+function namaBulan(index) {
+  const bulan = {
+    11: "Desember",
+  };
+  return bulan[index];
+}
+
+function DisplayBulan({ budget, ...props }) {
+  return (
+    <Box
+      className="display-bulan"
+      textTransform="uppercase"
+      fontSize="2xl"
+      color="gray.300"
+      {...props}
+    >
+      {namaBulan(typeof budget.bulan === "number" ? budget.bulan : 11)}
+    </Box>
+  );
+}
+
 function InfoDetail({ id }) {
   const line = useBudgetLine(id);
 
@@ -73,9 +94,10 @@ function DaftarAlokasiAnggaran({ budget }) {
           </Box>
         </Center>
       )}
+
       <InfoDetail id={idDiseleksi} />
     </Grid>
   );
 }
 
-export { DaftarAlokasiAnggaran };
+export { DisplayBulan, DaftarAlokasiAnggaran };
