@@ -5,7 +5,6 @@ import {
   Center,
   chakra,
   FormControl,
-  Grid,
   Input,
   Modal,
   ModalBody,
@@ -14,14 +13,13 @@ import {
   ModalFooter,
   ModalOverlay,
   Select,
-  Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useMutation, useQuery } from "react-query";
 import { client } from "../utils";
 import { useSearchDanaLines } from "../utils/dana-lines";
-import { useBudgetLine, useSearchBudgetLines } from "../utils/budget-lines";
-import { TabelBudget } from "../components/table";
+import { useSearchBudgetLines } from "../utils/budget-lines";
+import { DaftarAlokasiAnggaran } from "../components/budget";
 
 function DisplayBulan(props) {
   return (
@@ -112,62 +110,6 @@ function DisplayDanaBudget({ budgetId }) {
         ,00
       </chakra.span>
     </Box>
-  );
-}
-
-function InfoDetail({ id }) {
-  const line = useBudgetLine(id);
-
-  return (
-    <Box>
-      <Text>...to be developed</Text>
-      <Text>Info</Text>
-      {id ? <Text>ID: {id}</Text> : "Line belum diseleksi."}
-
-      {line.data && (
-        <>
-          <chakra.h1>{line.data.kategori}</chakra.h1>
-          <Text>Dianggarkan: Rp {line.data.dianggarkan}</Text>
-        </>
-      )}
-    </Box>
-  );
-}
-
-function DaftarAlokasiAnggaran({ budgetId }) {
-  const budgetLines = useSearchBudgetLines("budgetId", budgetId);
-  const [idDiseleksi, setIdDiseleksi] = React.useState(null);
-
-  function onSeleksi(alokasiId) {
-    setIdDiseleksi(alokasiId);
-  }
-
-  return (
-    <Grid templateColumns="2fr 1fr" columnGap="16" mt="72px">
-      {budgetLines.data ? (
-        budgetLines.data?.length > 0 ? (
-          <TabelBudget
-            data={budgetLines.data}
-            lineDiseleksi={idDiseleksi}
-            onSeleksi={onSeleksi}
-          />
-        ) : (
-          <Center>
-            <Box bgColor="white" p="26" borderRadius="md">
-              Tidak ada data.
-            </Box>
-          </Center>
-        )
-      ) : (
-        <Center>
-          <Box bgColor="white" p="26" borderRadius="md">
-            Sedang menyiapkan tabel...
-          </Box>
-        </Center>
-      )}
-
-      <InfoDetail id={idDiseleksi} />
-    </Grid>
   );
 }
 
@@ -302,30 +244,30 @@ function ModalBelanja({ budgetId }) {
   );
 }
 
-const bulan = getBulan(11);
-
 function BudgetScreen() {
-  const { data: budget, isLoading } = useBudgetLatest();
+  const { data: budget } = useQuery(["budget", "latest"], async () => {
+    try {
+      return (await client("/budget?latest=true")).data;
+    } catch (error) {
+      throw new Error(error);
+    }
+  });
 
-  if (isLoading) {
+  if (!budget) {
     return <Center>Memuat screen...</Center>;
   }
 
   return (
     <Box mx="16">
       <Center flexDirection="column">
-        <DisplayBulan mt="12">{budget.bulan || namaBulan(bulan)}</DisplayBulan>
-        <DisplayDanaBudget budgetId={budget.id} />
-        <ModalBelanja budgetId={budget.id} />
+        <DisplayBulan mt="12">{budget.bulan || namaBulan(11)}</DisplayBulan>
+        <DisplayDanaBudget budget={budget} />
+        <ModalBelanja budget={budget} />
       </Center>
 
-      <DaftarAlokasiAnggaran budgetId={budget.id} />
+      <DaftarAlokasiAnggaran budget={budget} />
     </Box>
   );
-}
-
-function getBulan(dummyBulan) {
-  return dummyBulan || new Date().getMonth();
 }
 
 function namaBulan(bulan) {
@@ -335,18 +277,6 @@ function namaBulan(bulan) {
     default:
       console.error("Bulan gak disupport");
   }
-}
-
-function useBudgetLatest() {
-  const budget = useQuery(["budget-default"], async () => {
-    try {
-      const responBudget = await client("/budget?latest=true");
-      return responBudget.data;
-    } catch (error) {
-      throw new Error(error);
-    }
-  });
-  return budget;
 }
 
 const totalByField = (arr, fieldJumlah) => {
