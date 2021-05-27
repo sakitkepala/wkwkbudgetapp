@@ -57,7 +57,7 @@ function DialogInputBelanja({ budget }) {
       }
     },
     {
-      onSettled: () => {
+      onSuccess: () => {
         queryClient.invalidateQueries(["budget", "latest"]);
         queryClient.invalidateQueries(["budget-lines", `budget-${budget.id}`]);
       },

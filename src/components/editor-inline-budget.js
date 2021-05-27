@@ -13,13 +13,36 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
-import { useUpdateBudgetLine } from "../utils/budget-lines";
+import { client } from "../utils";
+import { useMutation, useQueryClient } from "react-query";
 
 function EditorInlineBudget({ line, ml, mr }) {
+  const queryClient = useQueryClient();
   const { onOpen, onClose, isOpen } = useDisclosure();
 
   const [inputBudget, setInputBudget] = React.useState(line.dianggarkan);
-  const { mutate } = useUpdateBudgetLine();
+  const { mutate } = useMutation(
+    async (dataBaruLine) => {
+      try {
+        const respon = await client(`/budget-line/${dataBaruLine.id}`, {
+          method: "PUT",
+          data: dataBaruLine,
+        });
+        return respon.data;
+      } catch (error) {
+        throw new Error(error);
+      }
+    },
+    {
+      onSuccess: (dataBaruLine) => {
+        queryClient.invalidateQueries(["budget", "latest"]);
+        queryClient.invalidateQueries([
+          "budget-lines",
+          `budget-${dataBaruLine.budgetId}`,
+        ]);
+      },
+    }
+  );
 
   const initialFocusRef = React.useRef();
 
