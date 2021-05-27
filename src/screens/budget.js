@@ -19,79 +19,8 @@ import { useMutation, useQuery } from "react-query";
 import { client } from "../utils";
 import { DaftarAlokasiAnggaran, DisplayBulan } from "../components/budget";
 
-function reducerDanaBudget(state, action) {
-  const { total, dipakai } = action;
-
-  switch (action.type) {
-    case "TOTAL":
-      if (total === state.total) {
-        return state;
-      }
-      return { ...state, total, sisa: total - state.dipakai };
-
-    case "DIPAKAI":
-      if (dipakai === state.dipakai) {
-        return state;
-      }
-      return { ...state, dipakai, sisa: state.total - dipakai };
-
-    default:
-      console.error("Tipe dispatch gak disupport.");
-      return state;
-  }
-}
-
-const danaAwal = {
-  total: 0, // dari total semua dana akun yang ditampung
-  dipakai: 0, // dari total jumlah alokasi di semua kategori
-  sisa: 0, // nilai turunan yang berguna sebagai indikator untuk user
-};
-
 function DisplayDanaBudget({ budget }) {
-  const { data: danaLines } = useQuery(
-    ["dana-lines", `budget-${budget.id}`],
-    async () => {
-      try {
-        return (await client(`/dana-line?budgetId=${budget.id}`)).data;
-      } catch (error) {
-        throw new Error(error);
-      }
-    },
-    { enabled: Boolean(budget) }
-  );
-
-  const { data: budgetLines } = useQuery(
-    ["budget-lines", `budget-${budget.id}`],
-    async () => {
-      try {
-        return (await client(`/budget-line?budgetId=${budget.id}`)).data;
-      } catch (error) {
-        throw new Error(error);
-      }
-    },
-    { enabled: Boolean(budget) }
-  );
-
-  const [dana, dispatch] = React.useReducer(reducerDanaBudget, danaAwal);
-  const jumlahDanaTersedia = dana.sisa;
-
-  React.useEffect(() => {
-    if (!danaLines) {
-      return;
-    }
-
-    const totalDana = totalByField(danaLines, "jumlah");
-    dispatch({ type: "TOTAL", total: totalDana });
-  }, [dana, danaLines]);
-
-  React.useEffect(() => {
-    if (!budgetLines) {
-      return;
-    }
-
-    const totalBudget = totalByField(budgetLines, "dianggarkan");
-    dispatch({ type: "DIPAKAI", dipakai: totalBudget });
-  }, [dana, budgetLines]);
+  const { jumlahDanaTersedia } = budget;
 
   return (
     <Box
@@ -275,11 +204,5 @@ function BudgetScreen() {
     </Box>
   );
 }
-
-const totalByField = (arr, fieldJumlah) => {
-  return arr.length > 0
-    ? arr.reduce((total, line) => total + line[fieldJumlah], 0)
-    : 0;
-};
 
 export { BudgetScreen };

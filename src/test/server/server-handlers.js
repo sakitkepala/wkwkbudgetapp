@@ -8,16 +8,31 @@ import * as belanjaDB from "../data/belanja";
 
 const handlers = [
   rest.get("/budget", async (req, res, context) => {
-    // get latest budget
-    const paramLatest = Boolean(req.url.searchParams.get("latest"));
-    if (paramLatest) {
-      const data = await budgetDB.readLatest();
-      return res(context.json({ data }));
-    }
+    try {
+      // get latest budget
+      const paramLatest = Boolean(req.url.searchParams.get("latest"));
+      if (paramLatest) {
+        const data = await budgetDB.readLatest();
 
-    // collection
-    const data = await budgetDB.readAll();
-    return res(context.json({ data }));
+        const jumlahDanaTersedia =
+          (await danaLineDB.searchByField("budgetId", data.id)).reduce(
+            (total, dana) => total + dana.jumlah,
+            0
+          ) -
+          (await belanjaDB.searchByField("budgetId", data.id)).reduce(
+            (total, dana) => total + dana.jumlah,
+            0
+          );
+
+        return res(context.json({ data: { ...data, jumlahDanaTersedia } }));
+      }
+
+      // collection
+      const data = await budgetDB.readAll();
+      return res(context.json({ data }));
+    } catch (error) {
+      return res(context.status(400), context.json({ error }));
+    }
   }),
 
   rest.get("/budget-line", async (req, res, context) => {
@@ -30,7 +45,7 @@ const handlers = [
       );
 
       if (!dataRaw || dataRaw === []) {
-        return res(context.status(401));
+        return res(context.status(400));
       }
 
       // Percobaan untuk lakukan compute di backend
@@ -113,5 +128,11 @@ const handlers = [
     return res(context.json({ data }));
   }),
 ];
+
+// const totalByField = (arr, fieldJumlah) => {
+//   return arr.length > 0
+//     ? arr.reduce((total, line) => total + line[fieldJumlah], 0)
+//     : 0;
+// };
 
 export { handlers };
