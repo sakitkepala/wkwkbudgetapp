@@ -42,7 +42,7 @@ function KontainerTabel({ children }) {
   );
 }
 
-function TabelBudget({ data, lineDiseleksi, onSeleksi }) {
+function TabelBudget({ budgetLines, lineDiseleksi, onSeleksi }) {
   const columns = React.useMemo(
     () => [
       {
@@ -102,7 +102,18 @@ function TabelBudget({ data, lineDiseleksi, onSeleksi }) {
         },
       },
     ],
-    []
+    [lineDiseleksi, onSeleksi]
+  );
+
+  const data = React.useMemo(
+    () =>
+      budgetLines.map((line) => {
+        return {
+          ...line,
+          kategori: line.kategoriId.nama,
+        };
+      }),
+    [budgetLines]
   );
 
   const konfigTabel = { data, columns };

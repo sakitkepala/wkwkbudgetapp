@@ -51,17 +51,22 @@ const handlers = [
       // Percobaan untuk lakukan compute di backend
       const data = await Promise.all(
         dataRaw.map(async (line) => {
+          const lineAkhir = {
+            ...line,
+            kategoriId: await kategoriDB.read(line.kategoriId),
+          };
+
           const belanjaIds = await belanjaDB.search({
             kategoriId: line.kategoriId,
             budgetId: Number(queryBudgetId),
           });
 
           if (belanjaIds.length <= 0) {
-            return line;
+            return lineAkhir;
           }
 
           return {
-            ...line,
+            ...lineAkhir,
             terpakai: belanjaIds.reduce((p, n) => p + n.jumlah, 0),
           };
         })

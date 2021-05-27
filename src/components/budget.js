@@ -236,7 +236,7 @@ function DaftarAlokasiAnggaran({ budget }) {
     <Grid templateColumns="2fr 1fr" columnGap="16" mt="72px">
       {budgetLines.length > 0 ? (
         <TabelBudget
-          data={budgetLines}
+          budgetLines={budgetLines}
           lineDiseleksi={idDiseleksi}
           onSeleksi={onSeleksi}
         />
