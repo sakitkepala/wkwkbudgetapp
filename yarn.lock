@@ -1204,7 +1204,7 @@
     "@graphql-tools/utils" "9.1.1"
     tslib "^2.4.0"
 
-"@graphql-tools/schema@^9.0.0":
+"@graphql-tools/schema@^9.0.0", "@graphql-tools/schema@^9.0.10":
   version "9.0.10"
   resolved "https://registry.yarnpkg.com/@graphql-tools/schema/-/schema-9.0.10.tgz#77ba3dfab241f0232dc0d3ba03201663b63714e2"
   integrity sha512-lV0o4df9SpPiaeeDAzgdCJ2o2N9Wvsp0SMHlF2qDbh9aFCFQRsXuksgiDm2yTgT3TG5OtUes/t0D6uPjPZFUbQ==

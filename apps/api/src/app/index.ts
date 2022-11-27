@@ -1,19 +1,7 @@
 import fastify, { FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
-import { createYoga, createSchema } from 'graphql-yoga';
-
-const schema = createSchema({
-  typeDefs: /* GraphQL */ `
-    type Query {
-      hello: String!
-    }
-  `,
-  resolvers: {
-    Query: {
-      hello: async () => 'hai',
-    },
-  },
-});
+import { createYoga } from 'graphql-yoga';
+import { schema } from '@wkwkbudgetapp/graphql';
 
 function buildServer() {
   const server: FastifyInstance = fastify({ logger: true });
