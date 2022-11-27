@@ -16,7 +16,13 @@
         "main": "apps/ui/src/main.tsx",
         "polyfills": "apps/ui/src/polyfills.ts",
         "tsConfig": "apps/ui/tsconfig.app.json",
-        "assets": ["apps/ui/src/favicon.ico", "apps/ui/src/assets"],
+        "assets": [
+          "apps/ui/src/favicon.ico",
+          "apps/ui/src/assets",
+          "apps/ui/src/pwa-assets",
+          "apps/ui/src/manifest.json",
+          "apps/ui/src/wkwkworker.js"
+        ],
         "scripts": [],
         "webpackConfig": "@nrwl/react/plugins/webpack"
       },
