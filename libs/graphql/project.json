@@ -18,6 +18,13 @@
         "jestConfig": "libs/graphql/jest.config.ts",
         "passWithNoTests": true
       }
+    },
+    "codegen": {
+      "executor": "nx:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "graphql-codegen --config=libs/graphql/codegen.ts"
+      }
     }
   },
   "tags": []

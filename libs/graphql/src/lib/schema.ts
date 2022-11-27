@@ -3,14 +3,16 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 
+import type { Resolvers } from './types/resolvers';
+
 const typeDefs = readFileSync(
   join(__dirname, 'schemas/schema.graphql'),
   'utf8'
 );
 
-const resolvers = {
+const resolvers: Resolvers = {
   Query: {
-    hello: async () => 'hai',
+    hello: () => 'hai',
   },
 };
 
