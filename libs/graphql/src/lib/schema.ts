@@ -2,19 +2,12 @@
 import { readFileSync } from 'fs';
 import { join } from 'path';
 import { makeExecutableSchema } from '@graphql-tools/schema';
-
-import type { Resolvers } from './types/resolvers';
+import { resolvers } from './resolvers';
 
 const typeDefs = readFileSync(
   join(__dirname, 'schemas/schema.graphql'),
   'utf8'
 );
-
-const resolvers: Resolvers = {
-  Query: {
-    hello: () => 'hai',
-  },
-};
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 

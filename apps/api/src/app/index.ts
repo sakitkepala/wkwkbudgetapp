@@ -1,13 +1,18 @@
 import fastify, { FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
 import { createYoga } from 'graphql-yoga';
-import { schema } from '@wkwkbudgetapp/graphql';
+import {
+  schema,
+  createContext,
+  FastifyServerContext,
+  CustomContext,
+} from '@wkwkbudgetapp/graphql';
 
 function buildServer() {
   const server: FastifyInstance = fastify({ logger: true });
   server.register(cors);
 
-  const graphqlServer = createYoga({
+  const graphqlServer = createYoga<FastifyServerContext, CustomContext>({
     logging: {
       debug: (...args) => args.forEach((arg) => server.log.debug(arg)),
       info: (...args) => args.forEach((arg) => server.log.info(arg)),
@@ -15,6 +20,7 @@ function buildServer() {
       error: (...args) => args.forEach((arg) => server.log.error(arg)),
     },
     schema,
+    context: createContext,
   });
 
   server.route({

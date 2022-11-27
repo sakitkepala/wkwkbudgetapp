@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@wkwkbudgetapp/database": ["libs/database/src/index.ts"],
       "@wkwkbudgetapp/graphql": ["libs/graphql/src/index.ts"]
     }
   },
