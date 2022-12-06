@@ -1,4 +1,5 @@
 import type { Resolvers } from './generated/resolvers-types';
+import { hash, compare } from 'bcryptjs';
 
 const resolvers: Resolvers = {
   Query: {
@@ -37,13 +38,12 @@ const resolvers: Resolvers = {
         throw new Error('Username sudah terdaftar');
       }
 
-      // TODO: enkrip password sebelum disimpan
-
+      const passwordWithHash = await hash(args.password, 10);
       const userCreated = await context.prisma.user.create({
         data: {
           email: args.email,
           username: args.username,
-          password: args.password,
+          password: passwordWithHash,
         },
       });
       return {
@@ -67,7 +67,9 @@ const resolvers: Resolvers = {
       if (!foundUser) {
         throw new Error('Email belum terdaftar');
       }
-      if (args.password !== foundUser.password) {
+
+      const match = await compare(args.password, foundUser.password);
+      if (!match) {
         throw new Error('Password tidak sesuai');
       }
 
