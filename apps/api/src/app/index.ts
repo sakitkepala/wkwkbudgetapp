@@ -9,7 +9,13 @@ import {
 } from '@wkwkbudgetapp/graphql';
 
 function buildServer() {
-  const server: FastifyInstance = fastify({ logger: true });
+  const server: FastifyInstance = fastify({
+    logger: {
+      transport: {
+        target: 'pino-pretty',
+      },
+    },
+  });
   server.register(cors);
 
   const graphqlServer = createYoga<FastifyServerContext, CustomContext>({
