@@ -5,8 +5,8 @@ type Query {
 }
 
 type Mutation {
-  signup(email: String!, password: String!, username: String): AuthPayload
-  login(email: String!, password: String!): AuthPayload
+  signup(email: String!, password: String!, username: String): User
+  login(email: String!, password: String!): User
   logout: String!
 }
 
@@ -14,9 +14,4 @@ type User {
   id: ID!
   username: String
   email: String!
-}
-
-type AuthPayload {
-  token: String
-  user: User
 }

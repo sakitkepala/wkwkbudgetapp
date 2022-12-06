@@ -47,12 +47,9 @@ const resolvers: Resolvers = {
         },
       });
       return {
-        token: userCreated.password,
-        user: {
-          id: userCreated.id.toString(),
-          email: userCreated.email,
-          username: userCreated.username,
-        },
+        id: userCreated.id.toString(),
+        email: userCreated.email,
+        username: userCreated.username,
       };
     },
 
@@ -75,12 +72,9 @@ const resolvers: Resolvers = {
 
       context.req.session.set('userId', foundUser.id);
       return {
-        token: foundUser.password,
-        user: {
-          id: foundUser.id.toString(),
-          email: foundUser.email,
-          username: foundUser.username,
-        },
+        id: foundUser.id.toString(),
+        email: foundUser.email,
+        username: foundUser.username,
       };
     },
 
