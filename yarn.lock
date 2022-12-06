@@ -1205,6 +1205,14 @@
     ajv-formats "^2.1.1"
     fast-uri "^2.0.0"
 
+"@fastify/cookie@^8.0.0", "@fastify/cookie@^8.3.0":
+  version "8.3.0"
+  resolved "https://registry.yarnpkg.com/@fastify/cookie/-/cookie-8.3.0.tgz#7d3304fcf0d11ea64ae8e02d65ae217b01fe1cf4"
+  integrity sha512-P9hY9GO11L20TnZ33XN3i0bt+3x0zaT7S0ohAzWO950E9PB2xnNhLYzPFJIGFi5AVN0yr5+/iZhWxeYvR6KCzg==
+  dependencies:
+    cookie "^0.5.0"
+    fastify-plugin "^4.0.0"
+
 "@fastify/cors@^8.2.0":
   version "8.2.0"
   resolved "https://registry.yarnpkg.com/@fastify/cors/-/cors-8.2.0.tgz#44ce6b28bc111e12679cb02f980f0ce865ff4877"
@@ -1229,6 +1237,15 @@
   integrity sha512-cTKBV2J9+u6VaKDhX7HepSfPSzw+F+TSd+k0wzifj4rG+4E5PjSFJCk19P8R6tr/72cuzgGd+mbB3jFT6lvAgw==
   dependencies:
     fast-json-stringify "^5.0.0"
+
+"@fastify/secure-session@^5.3.0":
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/@fastify/secure-session/-/secure-session-5.3.0.tgz#1c07a9cca429e683cfb17cdd4df15c4afbfe17b1"
+  integrity sha512-la2MAgzofZVdAxN8lZjyx/HnOTE+n7HRDm2GaBNCNfgaB4ez8BGN0xGSHtCvxIJBVz9bKCZY1lhUz+6w6cNWjg==
+  dependencies:
+    "@fastify/cookie" "^8.0.0"
+    fastify-plugin "^4.0.0"
+    sodium-native "^3.0.0"
 
 "@graphql-codegen/cli@^2.14.1":
   version "2.14.1"
@@ -10186,6 +10203,13 @@ sockjs@^0.3.24:
     faye-websocket "^0.11.3"
     uuid "^8.3.2"
     websocket-driver "^0.7.4"
+
+sodium-native@^3.0.0:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/sodium-native/-/sodium-native-3.4.1.tgz#44616c07ccecea15195f553af88b3e574b659741"
+  integrity sha512-PaNN/roiFWzVVTL6OqjzYct38NSXewdl2wz8SRB51Br/MLIJPrbM3XexhVWkq7D3UWMysfrhKVf1v1phZq6MeQ==
+  dependencies:
+    node-gyp-build "^4.3.0"
 
 sonic-boom@^3.0.0:
   version "3.2.1"

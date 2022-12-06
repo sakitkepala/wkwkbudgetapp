@@ -9,7 +9,9 @@
   },
   "private": true,
   "dependencies": {
+    "@fastify/cookie": "^8.3.0",
     "@fastify/cors": "^8.2.0",
+    "@fastify/secure-session": "^5.3.0",
     "@graphql-tools/schema": "^9.0.10",
     "@prisma/client": "^4.6.1",
     "core-js": "^3.6.5",

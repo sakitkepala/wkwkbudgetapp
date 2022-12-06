@@ -1,5 +1,6 @@
 import fastify, { FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
+import secureSession from '@fastify/secure-session';
 import { createYoga } from 'graphql-yoga';
 import {
   schema,
@@ -8,15 +9,29 @@ import {
   CustomContext,
 } from '@wkwkbudgetapp/graphql';
 
+import { readFileSync } from 'fs';
+import { join, resolve } from 'path';
+
+const loggerOptions = {
+  test: false,
+  production: true,
+  local: {
+    transport: { target: 'pino-pretty' },
+  },
+};
+
 function buildServer() {
   const server: FastifyInstance = fastify({
-    logger: {
-      transport: {
-        target: 'pino-pretty',
-      },
-    },
+    logger: loggerOptions['local'] ?? true,
   });
+
   server.register(cors);
+
+  server.register(secureSession, {
+    key: readFileSync(join(resolve('./'), 'secret-key')),
+    cookieName: 'wkwkbudgetapp-auth',
+    cookie: { httpOnly: true, sameSite: 'lax' },
+  });
 
   const graphqlServer = createYoga<FastifyServerContext, CustomContext>({
     logging: {

@@ -1,23 +1,33 @@
 import { PrismaClient } from '@prisma/client';
 import type { FastifyRequest, FastifyReply } from 'fastify';
+import type { Session } from '@fastify/secure-session';
 import type { YogaInitialContext } from 'graphql-yoga';
 
-const prisma = new PrismaClient();
+declare module 'fastify' {
+  interface FastifyRequest {
+    session: Session;
+  }
+}
 
-export type FastifyServerContext = { req: FastifyRequest; reply: FastifyReply };
+export type FastifyServerContext = {
+  req: FastifyRequest;
+  reply: FastifyReply;
+};
 
-export type CustomContext = { prisma: PrismaClient; currentUser: CurrentUser };
+export type CustomContext = {
+  prisma: PrismaClient;
+  currentUser: CurrentUser;
+};
 
 export type GraphQLContext = FastifyServerContext & CustomContext;
+
+const prisma = new PrismaClient();
 
 async function createContext(
   initialContext: YogaInitialContext & FastifyServerContext
 ): Promise<CustomContext> {
   const currentUser = await authenticateUser(initialContext.req);
-  return {
-    prisma,
-    currentUser,
-  };
+  return { prisma, currentUser };
 }
 
 export type CurrentUser = null | {
@@ -25,12 +35,15 @@ export type CurrentUser = null | {
 };
 
 async function authenticateUser(req: FastifyRequest): Promise<CurrentUser> {
-  // TODO: ambil token/info auth dari session di request & di database.
-  // Implemen session dulu di request Fastify biar bisa diakses kaya gini kurleb:
-  // req.session.token // misalnya. untuk dekrip & ambil data email & pass
-  // prisma.user.findUnique({where: {id: getIdFromToken(token)}})
-
-  return null;
+  const userId = req.session.get('userId');
+  if (!userId) {
+    return null;
+  }
+  const user = await prisma.user.findUnique({ where: { id: userId } });
+  if (!user) {
+    return null;
+  }
+  return { id: user.id };
 }
 
 export { createContext };

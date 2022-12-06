@@ -1,15 +1,18 @@
 type Query {
+  me: User!
   hello: String!
+  protected: String!
 }
 
 type Mutation {
   signup(email: String!, password: String!, username: String): AuthPayload
   login(email: String!, password: String!): AuthPayload
+  logout: String!
 }
 
 type User {
   id: ID!
-  username: String!
+  username: String
   email: String!
 }
 
