@@ -15,7 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@wkwkbudgetapp/ui": ["libs/ui/src/index.ts"]
+      "@wkwkbudgetapp/ui": ["libs/ui/src/index.ts"],
+      "@wkwkbudgetapp/database": ["libs/database/src/index.ts"],
+      "@wkwkbudgetapp/graphql": ["libs/graphql/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
