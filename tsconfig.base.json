@@ -16,7 +16,18 @@
     "baseUrl": ".",
     "paths": {
       "@wkwkbudgetapp/database": ["libs/database/src/index.ts"],
+      "@wkwkbudgetapp/global-styles": ["libs/global-styles/src/index.ts"],
       "@wkwkbudgetapp/graphql": ["libs/graphql/src/index.ts"],
+      "@wkwkbudgetapp/screens/auth-login": [
+        "libs/screens/auth-login/src/index.ts"
+      ],
+      "@wkwkbudgetapp/screens/auth-register": [
+        "libs/screens/auth-register/src/index.ts"
+      ],
+      "@wkwkbudgetapp/screens/dashboard": [
+        "libs/screens/dashboard/src/index.ts"
+      ],
+      "@wkwkbudgetapp/screens/home": ["libs/screens/home/src/index.ts"],
       "@wkwkbudgetapp/ui": ["libs/ui/src/index.ts"]
     }
   },
