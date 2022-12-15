@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@wkwkbudgetapp/data-access": ["libs/data-access/src/index.ts"],
       "@wkwkbudgetapp/database": ["libs/database/src/index.ts"],
       "@wkwkbudgetapp/global-styles": ["libs/global-styles/src/index.ts"],
       "@wkwkbudgetapp/graphql": ["libs/graphql/src/index.ts"],
@@ -28,6 +29,7 @@
         "libs/screens/dashboard/src/index.ts"
       ],
       "@wkwkbudgetapp/screens/home": ["libs/screens/home/src/index.ts"],
+      "@wkwkbudgetapp/tests": ["libs/tests/src/index.ts"],
       "@wkwkbudgetapp/ui": ["libs/ui/src/index.ts"]
     }
   },
