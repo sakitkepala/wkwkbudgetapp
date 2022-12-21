@@ -1,0 +1,86 @@
+{
+  "name": "static-prototyping",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/static-prototyping/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "compiler": "babel",
+        "outputPath": "dist/apps/static-prototyping",
+        "index": "apps/static-prototyping/src/index.html",
+        "baseHref": "/",
+        "main": "apps/static-prototyping/src/main.tsx",
+        "polyfills": "apps/static-prototyping/src/polyfills.ts",
+        "tsConfig": "apps/static-prototyping/tsconfig.app.json",
+        "assets": [
+          "apps/static-prototyping/src/favicon.ico",
+          "apps/static-prototyping/src/assets"
+        ],
+        "styles": [],
+        "scripts": [],
+        "webpackConfig": "apps/frontend/webpack.config.js"
+      },
+      "configurations": {
+        "development": {
+          "extractLicenses": false,
+          "optimization": false,
+          "sourceMap": true,
+          "vendorChunk": true
+        },
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/static-prototyping/src/environments/environment.ts",
+              "with": "apps/static-prototyping/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/webpack:dev-server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "static-prototyping:build",
+        "hmr": true
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "static-prototyping:build:development",
+          "host": "0.0.0.0",
+          "port": 1111
+        },
+        "production": {
+          "buildTarget": "static-prototyping:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/static-prototyping/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/static-prototyping/jest.config.ts",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

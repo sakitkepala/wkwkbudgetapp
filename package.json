@@ -17,6 +17,7 @@
     "@tanstack/react-query": "^4.20.4",
     "@vanilla-extract/css": "^1.9.2",
     "bcryptjs": "^2.4.3",
+    "clsx": "^1.2.1",
     "core-js": "^3.6.5",
     "fastify": "^4.10.2",
     "graphql": "^16.6.0",
